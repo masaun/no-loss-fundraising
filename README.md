@@ -1,7 +1,7 @@
-# Data Bounty Platform📊
+# Data Bounty Platform📊by using Ocean Protocol
 
 ***
-## 【Introduction of Data Bounty Platform📊】
+## 【Introduction of Data Bounty Platform📊by using Ocean Protocol】
 - This is a dApp that ...
 
 &nbsp;
