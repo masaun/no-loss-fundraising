@@ -4,6 +4,23 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');  // @notice - Sh
 const mnemonic = process.env.MNEMONIC;
 
 
+const hdWalletStartIndex = 0
+const hdWalletAccounts = 0
+const setupWallet = (
+    url
+) => {
+    if (!hdWalletProvider) {
+        hdWalletProvider = new HDWalletProvider(
+            mnemonic,
+            url,
+            hdWalletStartIndex,
+            hdWalletAccounts)
+        hdWalletProvider.engine.addProvider(new NonceTrackerSubprovider())
+    }
+    return hdWalletProvider
+}
+
+
 module.exports = {
   networks: {
     ropsten: {
@@ -44,10 +61,21 @@ module.exports = {
       gasPrice: 5000000000
     }
   },
+  // nile the ocean beta network
+  nile: {
+    provider: () => setupWallet(
+        url || 'https://nile.dev-ocean.com'
+    ),
+    network_id: 0x2323, // 8995
+    gas: 6000000,
+    gasPrice: 10000,
+    from: '0x90eE7A30339D05E07d9c6e65747132933ff6e624'
+  },
+
 
   compilers: {
     solc: {
-      //version: "0.5.12",
+      version: "0.5.6",
       settings: {
         optimizer: {
           enabled: true,
