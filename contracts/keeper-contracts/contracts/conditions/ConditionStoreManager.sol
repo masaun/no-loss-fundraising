@@ -7,7 +7,8 @@ import '../Common.sol';
 import '../libraries/EpochLibrary.sol';
 import './ConditionStoreLibrary.sol';
 
-import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
+import '@openzeppelin/contracts/ownership/Ownable.sol';
+//import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
 
 /**
  * @title Condition Store Manager

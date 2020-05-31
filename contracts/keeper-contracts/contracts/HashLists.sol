@@ -5,7 +5,8 @@ pragma solidity 0.5.6;
 
 import './interfaces/IList.sol';
 import './libraries/HashListLibrary.sol';
-import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
+import '@openzeppelin/contracts/ownership/Ownable.sol';
+//import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
 
 /**
  * @title HashLists contract

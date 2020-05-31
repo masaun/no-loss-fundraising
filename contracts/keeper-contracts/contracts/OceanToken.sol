@@ -3,9 +3,12 @@ pragma solidity 0.5.6;
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
-import 'openzeppelin-eth/contracts/token/ERC20/ERC20Capped.sol';
-import 'openzeppelin-eth/contracts/token/ERC20/ERC20Detailed.sol';
-import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
+import '@openzeppelin/contracts/token/ERC20/ERC20Capped.sol';
+import '@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol';
+import '@openzeppelin/contracts/ownership/Ownable.sol';
+//import 'openzeppelin-eth/contracts/token/ERC20/ERC20Capped.sol';
+//import 'openzeppelin-eth/contracts/token/ERC20/ERC20Detailed.sol';
+//import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
 
 /**
  * @title Ocean Protocol ERC20 Token Contract

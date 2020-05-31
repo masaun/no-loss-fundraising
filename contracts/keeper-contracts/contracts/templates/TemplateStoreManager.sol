@@ -4,7 +4,8 @@ pragma solidity 0.5.6;
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
 import './TemplateStoreLibrary.sol';
-import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
+import '@openzeppelin/contracts/ownership/Ownable.sol';
+//import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
 
 /**
  * @title Template Store Manager

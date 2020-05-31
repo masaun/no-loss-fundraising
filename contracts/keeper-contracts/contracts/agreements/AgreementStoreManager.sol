@@ -7,7 +7,8 @@ import './AgreementStoreLibrary.sol';
 import '../conditions/ConditionStoreManager.sol';
 import '../registry/DIDRegistry.sol';
 import '../templates/TemplateStoreManager.sol';
-import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
+import '@openzeppelin/contracts/ownership/Ownable.sol';
+//import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
 
 /**
  * @title Agreement Store Manager
