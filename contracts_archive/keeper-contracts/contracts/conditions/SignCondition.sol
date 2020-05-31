@@ -5,7 +5,7 @@ pragma solidity 0.5.6;
 
 import './Condition.sol';
 import './ConditionStoreLibrary.sol';
-import '@openzeppelin/contracts/cryptography/ECDSA.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/cryptography/ECDSA.sol';
 //import 'openzeppelin-eth/contracts/cryptography/ECDSA.sol';
 
 /**

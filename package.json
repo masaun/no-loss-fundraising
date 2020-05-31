@@ -24,6 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@openzeppelin/contracts-ethereum-package": "^2.5.0",
+    "@openzeppelin/upgrades": "^2.8.0",
     "@truffle/hdwallet-provider": "^1.0.29",
     "dotenv": "^8.2.0",
     "eth-block-tracker": "^4.4.3"

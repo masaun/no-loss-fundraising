@@ -5,7 +5,7 @@ pragma solidity 0.5.6;
 
 // Contain upgraded version of the contracts for test
 import '../../OceanToken.sol';
-import '@openzeppelin/contracts/math/SafeMath.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol';
 //import 'openzeppelin-eth/contracts/math/SafeMath.sol';
 
 

@@ -7,7 +7,7 @@ import './AgreementStoreLibrary.sol';
 import '../conditions/ConditionStoreManager.sol';
 import '../registry/DIDRegistry.sol';
 import '../templates/TemplateStoreManager.sol';
-import '@openzeppelin/contracts/ownership/Ownable.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol';
 //import 'openzeppelin-eth/contracts/ownership/Ownable.sol';
 
 /**
