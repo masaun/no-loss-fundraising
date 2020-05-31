@@ -23,8 +23,7 @@
   "author": "masaun",
   "license": "MIT",
   "dependencies": {
-    "@oceanprotocol/keeper-contracts": "0.13.2",
-    "@openzeppelin/contracts-ethereum-package": "^2.5.0",
+    "@openzeppelin/contracts": "^2.5.1",
     "@truffle/hdwallet-provider": "^1.0.29",
     "dotenv": "^8.2.0",
     "eth-block-tracker": "^4.4.3"
