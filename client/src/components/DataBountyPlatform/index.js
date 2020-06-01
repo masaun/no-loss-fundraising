@@ -47,7 +47,7 @@ export default class DataBountyPlatform extends Component {
         const _amount = web3.utils.toWei('0.12345', 'ether');
         const _referralCode = 0;
 
-        let res1 = dai.approve(DATA_BOUNTY_PLATFORM_ADDRESS, _amount);
+        let res1 = await dai.methods.approve(DATA_BOUNTY_PLATFORM_ADDRESS, _amount).send({ from: accounts[0] });
         let res2 = await data_bounty_platform.methods.joinPool(_reserve, _amount, _referralCode).send({ from: accounts[0] });
         console.log('=== joinPool() ===\n', res2);                
     }
