@@ -36,13 +36,6 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     }
 
     /***
-     * @notice - Get balance
-     **/
-    function balanceOfContract() public view returns (uint balanceOfContract_DAI, uint balanceOfContract_ETH) {
-        return (dai.balanceOf(address(this)), address(this).balance);
-    }
-
-    /***
      * @notice - Join Pool (Deposit DAI into idle-contracts-v3) for getting right of voting
      **/
     function joinPool(address _reserve, uint256 _amount, uint16 _referralCode) public returns (bool) {
@@ -54,6 +47,13 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
         /// Deposit DAI
         lendingPool.deposit(_reserve, _amount, _referralCode);
+    }
+
+    /***
+     * @notice - Get balance
+     **/
+    function balanceOfContract() public view returns (uint balanceOfContract_DAI, uint balanceOfContract_ETH) {
+        return (dai.balanceOf(address(this)), address(this).balance);
     }
 
 }
