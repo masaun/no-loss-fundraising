@@ -11,6 +11,11 @@ import "./lib/OwnableOriginal.sol";
 import "./storage/McStorage.sol";
 import "./storage/McConstants.sol";
 
+// AAVE
+import "./aave/contracts/interfaces/ILendingPool.sol";
+import "./aave/contracts/interfaces/ILendingPoolCore.sol";
+import "./aave/contracts/interfaces/ILendingPoolAddressesProvider.sol";
+
 
 /***
  * @notice - This contract is that ...
@@ -19,9 +24,15 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     using SafeMath for uint;
 
     IERC20 public dai;
+    ILendingPool public lendingPool;
+    ILendingPoolCore public lendingPoolCore;
+    ILendingPoolAddressesProvider public lendingPoolAddressesProvider;
 
-    constructor(address daiAddress) public {
+    constructor(address daiAddress, address _lendingPool, address _lendingPoolCore, address _lendingPoolAddressesProvider) public {
         dai = IERC20(daiAddress);
+        lendingPool = ILendingPool(_lendingPool);
+        lendingPoolCore = ILendingPoolCore(_lendingPoolCore);
+        lendingPoolAddressesProvider = ILendingPoolAddressesProvider(_lendingPoolAddressesProvider);
     }
 
     /***
