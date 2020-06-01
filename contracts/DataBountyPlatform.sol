@@ -42,4 +42,18 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         return (dai.balanceOf(address(this)), address(this).balance);
     }
 
+    /***
+     * @notice - Join Pool (Deposit DAI into idle-contracts-v3) for getting right of voting
+     **/
+    function joinPool(address _reserve, uint256 _amount, uint16 _referralCode) public returns (bool) {
+        /// Transfer from wallet address
+        dai.transferFrom(msg.sender, address(this), _amount);
+
+        /// Approve LendingPool contract to move your DAI
+        dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), _amount);
+
+        /// Deposit DAI
+        lendingPool.deposit(_reserve, _amount, _referralCode);
+    }
+
 }
