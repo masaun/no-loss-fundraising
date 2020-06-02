@@ -49,9 +49,9 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         // lendingPool.deposit(_reserve, _amount, _referralCode);
 
         /// Save deposited amount each user
-        depositedDai[msg.sender] = _amount;
-        totalDepositedDai.add(_amount);
-        emit JoinPool(msg.sender, _reserve, _amount, totalDepositedDai);
+        // depositedDai[msg.sender] = _amount;
+        // totalDepositedDai.add(_amount);
+        // emit JoinPool(msg.sender, _reserve, _amount, totalDepositedDai);
     }
 
     /***

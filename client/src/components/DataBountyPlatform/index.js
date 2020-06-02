@@ -79,6 +79,16 @@ export default class DataBountyPlatform extends Component {
         console.log('=== voteForCompanyProfile() ===\n', res);           
     }
 
+    /***
+     * @notice - Distribute fund into selected CompanyProfile by voting)
+     **/
+    distributeFunds = async () => {
+        const { accounts, web3, dai, data_bounty_platform } = this.state;
+
+        let res = await data_bounty_platform.methods.distributeFunds().send({ from: accounts[0] });
+        console.log('=== distributeFunds() ===\n', res);        
+    }
+
 
     /***
      * @notice - Getter Functions
