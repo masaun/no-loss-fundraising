@@ -14,6 +14,7 @@ contract McStorage is McObjects, McEvents {
     uint totalDepositedDai;
     uint companyProfileId;
     uint companyProfileIteration;
+    uint companyProfileDeadline;
 
     
     //////////////////////////////////

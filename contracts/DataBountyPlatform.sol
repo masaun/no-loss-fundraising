@@ -40,13 +40,13 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
      **/
     function joinPool(address _reserve, uint256 _amount, uint16 _referralCode) public returns (bool) {
         /// Transfer from wallet address
-        //dai.transferFrom(msg.sender, address(this), _amount);
+        dai.transferFrom(msg.sender, address(this), _amount);
 
-        /// Approve LendingPool contract to move your DAI
-        dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), _amount);
+        // /// Approve LendingPool contract to move your DAI
+        // dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), _amount);
 
-        /// Deposit DAI
-        lendingPool.deposit(_reserve, _amount, _referralCode);
+        // /// Deposit DAI
+        // lendingPool.deposit(_reserve, _amount, _referralCode);
 
         /// Save deposited amount each user
         depositedDai[msg.sender] = _amount;
@@ -93,6 +93,25 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         if (companyProfileVotes[companyProfileIteration][companyProfileId] > topProjectVotes) {
             topProject[companyProfileIteration] = companyProfileId;
         }
+    }
+
+    /***
+     * @notice - Distribute fund into selected CompanyProfile by voting)
+     **/
+    function distributeFunds() public {
+        // On a *whatever we decide basis* the funds are distributed to the winning project
+        // E.g. every 2 weeks, the project with the most votes gets the generated interest.
+
+        require(companyProfileDeadline > now, "current vote still active");
+
+        if (topProject[companyProfileIteration] != 0) {
+            // TODO: do the payout!
+        }
+
+        companyProfileDeadline = companyProfileDeadline.add(votingInterval);
+
+        companyProfileIteration = companyProfileIteration.add(1);
+        topProject[companyProfileIteration] = 0;
     }
 
 
