@@ -12,4 +12,11 @@ contract McEvents {
         uint totalDepositedDai
     );
 
+    event CreateCompanyProfile(
+        uint indexed newCompanyProfileId, 
+        address companyProfileOwner,
+        McObjects.CompanyProfileState companyProfileState,
+        string companyProfileHash
+    );
+
 }

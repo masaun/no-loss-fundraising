@@ -12,6 +12,7 @@ contract McStorage is McObjects, McEvents {
     // @dev - Define as memory
     ///////////////////////////////////
     uint totalDepositedDai;
+    uint companyProfileId;
 
     
     //////////////////////////////////
@@ -19,6 +20,9 @@ contract McStorage is McObjects, McEvents {
     ///////////////////////////////////
     mapping (address => uint) depositedDai;
 
+    mapping(uint256 => address) public companyProfileOwner;
+    mapping(uint256 => string) public companyProfileDetails;
+    mapping(uint256 => CompanyProfileState) public companyProfileState; // Company profile Id to current state
 
 
 }

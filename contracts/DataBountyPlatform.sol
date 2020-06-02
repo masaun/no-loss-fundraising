@@ -55,6 +55,25 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     }
 
     /***
+     * @notice - Create a profile of company which request investment and list them.
+     * @return - New artwork id
+     **/
+    function createCompanyProfile(string memory companyProfileHash) public returns (uint newCompanyProfileId) {
+        // The first company profile will have an ID of 1
+        newCompanyProfileId = companyProfileId.add(1);
+
+        companyProfileOwner[newCompanyProfileId] = msg.sender;
+        companyProfileState[newCompanyProfileId] = CompanyProfileState.Active;
+        companyProfileDetails[newCompanyProfileId] = companyProfileHash;
+
+        emit CreateCompanyProfile(newCompanyProfileId, 
+                           companyProfileOwner[newCompanyProfileId], 
+                           companyProfileState[newCompanyProfileId], 
+                           companyProfileDetails[newCompanyProfileId]);
+    }
+
+
+    /***
      * @notice - Get balance
      **/
     function balanceOfContract() public view returns (uint balanceOfContract_DAI, uint balanceOfContract_ETH) {

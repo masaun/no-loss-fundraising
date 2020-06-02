@@ -6,16 +6,7 @@ contract McObjects {
     /***
      * @dev - Example
      **/
-    enum ExampleType { TypeA, TypeB, TypeC }
+    enum CompanyProfileState { Active, Withdrawn } // Cooldown
 
-    struct ExampleObject {
-        address addr;
-        uint amount;
-    }
-
-    struct Sample {
-        address addr;
-        uint amount;
-    }
 
 }
