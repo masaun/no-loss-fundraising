@@ -31,6 +31,7 @@ export default class DataBountyPlatform extends Component {
         this.joinPool = this.joinPool.bind(this);
         this.createCompanyProfile = this.createCompanyProfile.bind(this);
         this.voteForCompanyProfile = this.voteForCompanyProfile.bind(this);
+        this.distributeFunds = this.distributeFunds.bind(this);
 
         /////// Getter Functions of others
         this._balanceOfContract = this._balanceOfContract.bind(this);
@@ -265,6 +266,8 @@ export default class DataBountyPlatform extends Component {
                             <Button size={'small'} mt={3} mb={2} onClick={this.createCompanyProfile}> Create Company Profile </Button> <br />
 
                             <Button size={'small'} mt={3} mb={2} onClick={this.voteForCompanyProfile}> Vote For Company Profile </Button> <br />
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this.distributeFunds}> Distribute Funds </Button> <br />
 
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this._balanceOfContract}> Balance of contract </Button> <br />
                         </Card>
