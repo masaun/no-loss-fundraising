@@ -30,6 +30,7 @@ export default class DataBountyPlatform extends Component {
         /////// AAVE related functions
         this.joinPool = this.joinPool.bind(this);
         this.createCompanyProfile = this.createCompanyProfile.bind(this);
+        this.voteForCompanyProfile = this.voteForCompanyProfile.bind(this);
 
         /////// Getter Functions of others
         this._balanceOfContract = this._balanceOfContract.bind(this);
@@ -64,6 +65,18 @@ export default class DataBountyPlatform extends Component {
 
         let res = await data_bounty_platform.methods.createCompanyProfile(_companyProfileHash).send({ from: accounts[0] });
         console.log('=== createCompanyProfile() ===\n', res);           
+    }
+
+    /***
+     * @notice - Vote for a favorite CompanyProfile of voter (voter is only user who deposited before)
+     **/
+    voteForCompanyProfile = async () => {
+        const { accounts, web3, dai, data_bounty_platform } = this.state;
+
+        const _companyProfileIdToVoteFor = 1;
+
+        let res = await data_bounty_platform.methods.voteForCompanyProfile(_companyProfileIdToVoteFor).send({ from: accounts[0] });
+        console.log('=== voteForCompanyProfile() ===\n', res);           
     }
 
 
@@ -240,6 +253,8 @@ export default class DataBountyPlatform extends Component {
                             <Button size={'small'} mt={3} mb={2} onClick={this.joinPool}> Join Pool </Button> <br />
 
                             <Button size={'small'} mt={3} mb={2} onClick={this.createCompanyProfile}> Create Company Profile </Button> <br />
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this.voteForCompanyProfile}> Vote For Company Profile </Button> <br />
 
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this._balanceOfContract}> Balance of contract </Button> <br />
                         </Card>
