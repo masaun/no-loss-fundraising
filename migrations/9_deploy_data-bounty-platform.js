@@ -9,7 +9,7 @@ var contractAddressList = require('./contractAddress/contractAddress.js');
 var tokenAddressList = require('./tokenAddress/tokenAddress.js');
 var walletAddressList = require('./walletAddress/walletAddress.js');
 
-const daiAddress = tokenAddressList["Ropsten"]["DAI"];     // DAI address on Ropsten
+const daiAddress = tokenAddressList["Ropsten"]["DAIaave"];     // DAI address on Ropsten
 const _lendingPool = contractAddressList["Ropsten"]["Aave"]["LendingPool"];
 const _lendingPoolCore = contractAddressList["Ropsten"]["Aave"]["LendingPoolCore"];
 const _lendingPoolAddressesProvider = contractAddressList["Ropsten"]["Aave"]["LendingPoolAddressesProvider"];
