@@ -13,6 +13,7 @@ contract McStorage is McObjects, McEvents {
     ///////////////////////////////////
     uint totalDepositedDai;
     uint companyProfileId;
+    uint companyProfileIteration;
 
     
     //////////////////////////////////
@@ -24,5 +25,7 @@ contract McStorage is McObjects, McEvents {
     mapping(uint256 => string) public companyProfileDetails;
     mapping(uint256 => CompanyProfileState) public companyProfileState; // Company profile Id to current state
 
-
+    mapping(uint256 => mapping(address => uint256)) public usersNominatedProject; // Means user can only have one project.
+    mapping(uint256 => mapping(uint256 => uint256)) public companyProfileVotes;
+    mapping(uint256 => uint256) public topProject;
 }

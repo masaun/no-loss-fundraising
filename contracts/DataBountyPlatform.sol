@@ -56,7 +56,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
     /***
      * @notice - Create a profile of company which request investment and list them.
-     * @return - New artwork id
+     * @return - New company profile id
      **/
     function createCompanyProfile(string memory companyProfileHash) public returns (uint newCompanyProfileId) {
         // The first company profile will have an ID of 1
@@ -71,6 +71,30 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
                            companyProfileState[newCompanyProfileId], 
                            companyProfileDetails[newCompanyProfileId]);
     }
+
+    /***
+     * @notice - Vote for a favorite CompanyProfile of voter (voter is only user who deposited before)
+     **/
+    function voteForCompanyProfile(uint256 companyProfileIdToVoteFor) public {
+        // Can only vote if they joined a previous iteration round...
+        // Check if the msg.sender has given approval rights to our steward to vote on their behalf
+        uint currentCompanyProfile = usersNominatedProject[companyProfileIteration][msg.sender];
+        if (currentCompanyProfile != 0) {
+            companyProfileVotes[companyProfileIteration][currentCompanyProfile] = companyProfileVotes[companyProfileIteration][currentCompanyProfile].sub(depositedDai[msg.sender]);
+        }
+
+        companyProfileVotes[companyProfileIteration][companyProfileIdToVoteFor] = companyProfileVotes[companyProfileIteration][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
+
+        usersNominatedProject[companyProfileIteration][msg.sender] = companyProfileIdToVoteFor;
+
+        uint topProjectVotes = companyProfileVotes[companyProfileIteration][topProject[companyProfileIteration]];
+
+        // TODO:: if they are equal there is a problem (we must handle this!!)
+        if (companyProfileVotes[companyProfileIteration][companyProfileId] > topProjectVotes) {
+            topProject[companyProfileIteration] = companyProfileId;
+        }
+    }
+
 
 
     /***
