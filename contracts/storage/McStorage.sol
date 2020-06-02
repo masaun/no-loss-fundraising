@@ -11,14 +11,14 @@ contract McStorage is McObjects, McEvents {
     ///////////////////////////////////
     // @dev - Define as memory
     ///////////////////////////////////
-    address[] exampleGroups;
+    uint totalDepositedDai;
 
     
     //////////////////////////////////
     // @dev - Define as storage
     ///////////////////////////////////
-    ExampleObject[] public exampleObjects;
+    mapping (address => uint) depositedDai;
 
-    mapping (uint256 => Sample) samples;
+
 
 }
