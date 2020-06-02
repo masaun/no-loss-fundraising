@@ -5,48 +5,18 @@ import "./McObjects.sol";
 
 contract McEvents {
 
-    event _PairCreated(
-        address indexed token0, 
-        address indexed token1, 
-        address pair
+    event JoinPool(
+        address indexed userWhoDeposited, 
+        address depositedToken, 
+        uint depositedAmount,
+        uint totalDepositedDai
     );
 
-    event MintUniToken(
-        address pair,
-        address to, 
-        uint liquidity
-    );
-
-    event _AddLiquidity(
-        address tokenA,
-        address tokenB,
-        uint amountA, 
-        uint amountB,
-        uint liquidity
-    );
-
-    event SyndicatedAddLiquidity(
-        address userA,
-        address userB,
-        address tokenA,
-        address tokenB,
-        uint amountA, 
-        uint amountB,
-        uint liquidity
-    );
-
-
-
-
-
-    /***
-     * @dev - Example
-     **/
-    event Example(
-        uint256 indexed Id, 
-        uint256 exchangeRateCurrent,
-        address msgSender,
-        uint256 approvedValue    
+    event CreateCompanyProfile(
+        uint indexed newCompanyProfileId, 
+        address companyProfileOwner,
+        McObjects.CompanyProfileState companyProfileState,
+        string companyProfileHash
     );
 
 }
