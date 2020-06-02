@@ -40,19 +40,18 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
      **/
     function joinPool(address _reserve, uint256 _amount, uint16 _referralCode) public returns (bool) {
         /// Transfer from wallet address
-        dai.transfer(msg.sender, _amount);
-        //dai.transferFrom(msg.sender, address(this), _amount);
+        dai.transferFrom(msg.sender, address(this), _amount);
 
-        // /// Approve LendingPool contract to move your DAI
-        // dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), _amount);
+        /// Approve LendingPool contract to move your DAI
+        dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), _amount);
 
-        // /// Deposit DAI
-        // lendingPool.deposit(_reserve, _amount, _referralCode);
+        /// Deposit DAI
+        lendingPool.deposit(_reserve, _amount, _referralCode);
 
         /// Save deposited amount each user
-        // depositedDai[msg.sender] = _amount;
-        // totalDepositedDai.add(_amount);
-        // emit JoinPool(msg.sender, _reserve, _amount, totalDepositedDai);
+        depositedDai[msg.sender] = _amount;
+        totalDepositedDai.add(_amount);
+        emit JoinPool(msg.sender, _reserve, _amount, totalDepositedDai);
     }
 
     /***
