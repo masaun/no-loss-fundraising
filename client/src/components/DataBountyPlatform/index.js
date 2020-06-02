@@ -29,6 +29,7 @@ export default class DataBountyPlatform extends Component {
 
         /////// AAVE related functions
         this.joinPool = this.joinPool.bind(this);
+        this.createCompanyProfile = this.createCompanyProfile.bind(this);
 
         /////// Getter Functions of others
         this._balanceOfContract = this._balanceOfContract.bind(this);
@@ -50,6 +51,19 @@ export default class DataBountyPlatform extends Component {
         let res1 = await dai.methods.approve(DATA_BOUNTY_PLATFORM_ADDRESS, _amount).send({ from: accounts[0] });
         let res2 = await data_bounty_platform.methods.joinPool(_reserve, _amount, _referralCode).send({ from: accounts[0] });
         console.log('=== joinPool() ===\n', res2);                
+    }
+
+    /***
+     * @notice - Create CompanyProfile and list them.
+     **/
+    createCompanyProfile = async () => {
+        const { accounts, web3, dai, data_bounty_platform } = this.state;
+
+        const companyProfileName = "Tiger.Inc";
+        const _companyProfileHash = web3.utils.toHex(companyProfileName);
+
+        let res = await data_bounty_platform.methods.createCompanyProfile(_companyProfileHash).send({ from: accounts[0] });
+        console.log('=== createCompanyProfile() ===\n', res);           
     }
 
 
@@ -224,6 +238,8 @@ export default class DataBountyPlatform extends Component {
                         >
                             <h4>Data Bounty Platform</h4> <br />
                             <Button size={'small'} mt={3} mb={2} onClick={this.joinPool}> Join Pool </Button> <br />
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this.createCompanyProfile}> Create Company Profile </Button> <br />
 
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this._balanceOfContract}> Balance of contract </Button> <br />
                         </Card>
