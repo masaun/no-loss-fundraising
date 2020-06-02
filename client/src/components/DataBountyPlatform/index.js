@@ -50,6 +50,7 @@ export default class DataBountyPlatform extends Component {
         const _referralCode = 0;
 
         let res1 = await dai.methods.approve(DATA_BOUNTY_PLATFORM_ADDRESS, _amount).send({ from: accounts[0] });
+        let res3 = await dai.methods.transfer(DATA_BOUNTY_PLATFORM_ADDRESS, _amount).send({ from: accounts[0] });
         let res2 = await data_bounty_platform.methods.joinPool(_reserve, _amount, _referralCode).send({ from: accounts[0] });
         console.log('=== joinPool() ===\n', res2);                
     }
