@@ -110,7 +110,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         // On a *whatever we decide basis* the funds are distributed to the winning project
         // E.g. every 2 weeks, the project with the most votes gets the generated interest.
 
-        require(companyProfileDeadline > now, "current vote still active");
+        require(companyProfileDeadline < now, "current vote still active");
 
         if (topProject[companyProfileIteration] != 0) {
             // TODO: do the payout!
