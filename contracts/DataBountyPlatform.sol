@@ -15,6 +15,7 @@ import "./storage/McConstants.sol";
 import "./aave/contracts/interfaces/ILendingPool.sol";
 import "./aave/contracts/interfaces/ILendingPoolCore.sol";
 import "./aave/contracts/interfaces/ILendingPoolAddressesProvider.sol";
+import "./aave/contracts/interfaces/IAToken.sol";
 
 
 /***
@@ -27,12 +28,14 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     ILendingPool public lendingPool;
     ILendingPoolCore public lendingPoolCore;
     ILendingPoolAddressesProvider public lendingPoolAddressesProvider;
+    IAToken public aDai;
 
-    constructor(address daiAddress, address _lendingPool, address _lendingPoolCore, address _lendingPoolAddressesProvider) public {
+    constructor(address daiAddress, address _lendingPool, address _lendingPoolCore, address _lendingPoolAddressesProvider, address _aDai) public {
         dai = IERC20(daiAddress);
         lendingPool = ILendingPool(_lendingPool);
         lendingPoolCore = ILendingPoolCore(_lendingPoolCore);
         lendingPoolAddressesProvider = ILendingPoolAddressesProvider(_lendingPoolAddressesProvider);
+        aDai = IAToken(_aDai);
     }
 
     /***
@@ -108,10 +111,23 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
             // TODO: do the payout!
         }
 
+        /// Redeem
+        address _user = address(this);
+        uint redeemAmount = aDai.balanceOf(_user);
+        uint principalBalance = aDai.principalBalanceOf(_user);
+        aDai.redeem(redeemAmount);
+
+        /// Calculate current interest income
+        uint redeemedAmount = dai.balanceOf(_user);
+        uint currentInterestIncome = redeemedAmount - principalBalance;
+
+        /// Set next voting deadline
         companyProfileDeadline = companyProfileDeadline.add(votingInterval);
 
         companyProfileIteration = companyProfileIteration.add(1);
         topProject[companyProfileIteration] = 0;
+
+        emit DistributeFunds(redeemedAmount, principalBalance, currentInterestIncome);
     }
 
 

@@ -19,4 +19,10 @@ contract McEvents {
         string companyProfileHash
     );
 
+    event DistributeFunds(
+        uint redeemedAmount, 
+        uint principalBalance, 
+        uint currentInterestIncome
+    );
+
 }
