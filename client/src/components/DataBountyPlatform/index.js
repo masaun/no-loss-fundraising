@@ -37,6 +37,7 @@ export default class DataBountyPlatform extends Component {
         this._balanceOfContract = this._balanceOfContract.bind(this);
 
         /////// Test Functions
+        this.getAaveRelatedFunction = this.getAaveRelatedFunction.bind(this);
         this.timestampFromDate = this.timestampFromDate.bind(this);
     }
 
@@ -103,7 +104,14 @@ export default class DataBountyPlatform extends Component {
 
     /***
      * @notice - Test Functions
-     **/
+     **/    
+    getAaveRelatedFunction = async () => {
+        const { accounts, web3, dai, data_bounty_platform } = this.state;
+
+        const aaveRelatedResult = await data_bounty_platform.methods.getAaveRelatedFunction().call();
+        console.log('=== getAaveRelatedFunction ===', aaveRelatedResult);
+    }
+
     timestampFromDate = async () => {
         const { accounts, web3, bokkypoobahs_datetime_contract } = this.state;
 
@@ -280,6 +288,8 @@ export default class DataBountyPlatform extends Component {
                               borderColor={"#E8E8E8"}
                         >
                             <h4>Test Functions</h4> <br />
+                            <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getAaveRelatedFunction}> Get Aave Related Function </Button> <br />
+
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.timestampFromDate}> Timestamp From Date </Button> <br />
                         </Card>
                     </Grid>

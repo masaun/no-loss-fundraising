@@ -144,4 +144,16 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         return (dai.balanceOf(address(this)), address(this).balance);
     }
 
+
+    /***
+     * @notice - Test Functions
+     **/    
+    function getAaveRelatedFunction() public view returns (uint redeemAmount, uint principalBalance) {
+        /// Redeem
+        address _user = address(this);
+        uint redeemAmount = aDai.balanceOf(_user);
+        uint principalBalance = aDai.principalBalanceOf(_user);
+    }
+    
+
 }
