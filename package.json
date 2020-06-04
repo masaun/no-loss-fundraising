@@ -13,6 +13,7 @@
     "console:ropsten": "truffle console --network ropsten",
     "compile:ropsten": "truffle compile --reset --network ropsten",
     "migrate:ropsten": "truffle migrate --reset --network ropsten",
+    "migrate:ropsten_quiknode": "truffle migrate --reset --network ropsten_quiknode",
     "console:kovan": "truffle console --network kovan",
     "compile:kovan": "truffle compile --reset --network kovan",
     "migrate:kovan": "truffle migrate --reset --network kovan",

@@ -5,6 +5,13 @@ const mnemonic = process.env.MNEMONIC;
 
 module.exports = {
   networks: {
+    ropsten_quiknode: {
+      provider: () => new HDWalletProvider(mnemonic, 'https://snowy-weathered-glade.ropsten.quiknode.pro/' + process.env.QUIKNODE_KEY),
+      network_id: '3',
+      gas: 4465030,
+      gasPrice: 5000000000, // 5 gwei
+      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets)
+    },      
     ropsten: {
       provider: () => new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/v3/' + process.env.INFURA_KEY),
       network_id: '3',
