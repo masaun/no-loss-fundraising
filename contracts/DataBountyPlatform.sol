@@ -15,6 +15,7 @@ import "./storage/McConstants.sol";
 import "./aave/contracts/interfaces/ILendingPool.sol";
 import "./aave/contracts/interfaces/ILendingPoolCore.sol";
 import "./aave/contracts/interfaces/ILendingPoolAddressesProvider.sol";
+import "./aave/contracts/interfaces/IAToken.sol";
 
 
 /***
@@ -23,16 +24,29 @@ import "./aave/contracts/interfaces/ILendingPoolAddressesProvider.sol";
 contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstants {
     using SafeMath for uint;
 
+    uint companyProfileId;
+    uint newCompanyProfileId;
+    uint companyProfileVotingRound;
+    uint totalDepositedDai;
+    uint[] topCompanyProfileIds;
+
     IERC20 public dai;
     ILendingPool public lendingPool;
     ILendingPoolCore public lendingPoolCore;
     ILendingPoolAddressesProvider public lendingPoolAddressesProvider;
+    IAToken public aDai;
 
-    constructor(address daiAddress, address _lendingPool, address _lendingPoolCore, address _lendingPoolAddressesProvider) public {
+    constructor(address daiAddress, address _lendingPool, address _lendingPoolCore, address _lendingPoolAddressesProvider, address _aDai) public {
         dai = IERC20(daiAddress);
         lendingPool = ILendingPool(_lendingPool);
         lendingPoolCore = ILendingPoolCore(_lendingPoolCore);
         lendingPoolAddressesProvider = ILendingPoolAddressesProvider(_lendingPoolAddressesProvider);
+        aDai = IAToken(_aDai);
+
+        /// every 1 weeks, voting deadline is updated
+        votingInterval = 10;         /// For testing (Every 10 second, voting deadline is updated)
+        //votingInterval = 1 weeks;  /// For actual 
+        companyProfileDeadline = now.add(votingInterval);        
     }
 
     /***
@@ -60,16 +74,17 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
      **/
     function createCompanyProfile(string memory companyProfileHash) public returns (uint newCompanyProfileId) {
         // The first company profile will have an ID of 1
-        newCompanyProfileId = companyProfileId.add(1);
+        newCompanyProfileId = companyProfileId++;
+        //newCompanyProfileId = companyProfileId.add(1);
 
         companyProfileOwner[newCompanyProfileId] = msg.sender;
         companyProfileState[newCompanyProfileId] = CompanyProfileState.Active;
         companyProfileDetails[newCompanyProfileId] = companyProfileHash;
 
         emit CreateCompanyProfile(newCompanyProfileId, 
-                           companyProfileOwner[newCompanyProfileId], 
-                           companyProfileState[newCompanyProfileId], 
-                           companyProfileDetails[newCompanyProfileId]);
+                                  companyProfileOwner[newCompanyProfileId], 
+                                  companyProfileState[newCompanyProfileId], 
+                                  companyProfileDetails[newCompanyProfileId]);
     }
 
     /***
@@ -78,40 +93,111 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     function voteForCompanyProfile(uint256 companyProfileIdToVoteFor) public {
         // Can only vote if they joined a previous iteration round...
         // Check if the msg.sender has given approval rights to our steward to vote on their behalf
-        uint currentCompanyProfile = usersNominatedProject[companyProfileIteration][msg.sender];
+        uint currentCompanyProfile = usersNominatedProject[companyProfileVotingRound][msg.sender];
         if (currentCompanyProfile != 0) {
-            companyProfileVotes[companyProfileIteration][currentCompanyProfile] = companyProfileVotes[companyProfileIteration][currentCompanyProfile].sub(depositedDai[msg.sender]);
+            companyProfileVotes[companyProfileVotingRound][currentCompanyProfile] = companyProfileVotes[companyProfileVotingRound][currentCompanyProfile].sub(depositedDai[msg.sender]);
         }
 
-        companyProfileVotes[companyProfileIteration][companyProfileIdToVoteFor] = companyProfileVotes[companyProfileIteration][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
+        /// "companyProfileVotingRound" is what number of voting round are.
+        /// Save what voting round is / who user voted for / how much user deposited
+        companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
 
-        usersNominatedProject[companyProfileIteration][msg.sender] = companyProfileIdToVoteFor;
+        /// Save who user voted for  
+        usersNominatedProject[companyProfileVotingRound][msg.sender] = companyProfileIdToVoteFor;
 
-        uint topProjectVotes = companyProfileVotes[companyProfileIteration][topProject[companyProfileIteration]];
+        /// Update voting count of voted companyProfileId
+        companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor].add(1);
+
+        /// Update current top project (artwork)
+        uint currentCompanyProfileId = companyProfileId;
+        uint topCompanyProfileVoteCount;
+        for (uint i=0; i < currentCompanyProfileId; i++) {
+            if (companyProfileVoteCount[companyProfileVotingRound][i] >= topCompanyProfileVoteCount) {
+                topCompanyProfileVoteCount = companyProfileVoteCount[companyProfileVotingRound][i];
+            } 
+        }
+
+        uint[] memory topCompanyProfileIds;
+        getTopCompanyProfileIds(companyProfileVotingRound, topCompanyProfileVoteCount);
+        topCompanyProfileIds = returnTopCompanyProfileIds();
 
         // TODO:: if they are equal there is a problem (we must handle this!!)
-        if (companyProfileVotes[companyProfileIteration][companyProfileId] > topProjectVotes) {
-            topProject[companyProfileIteration] = companyProfileId;
-        }
+        // if (companyProfileVotes[companyProfileVotingRound][companyProfileId] > topProjectVotes) {
+        //     topProject[companyProfileVotingRound] = companyProfileId;
+        // }
+
+        emit VoteForCompanyProfile(companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor],
+                                   companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor],
+                                   topCompanyProfileVoteCount,
+                                   topCompanyProfileIds);
     }
+
+    /// Need to execute for-loop in frontend to get TopCompanyProfileIds
+    function getTopCompanyProfileIds(uint _companyProfileVotingRound, uint _topCompanyProfileVoteCount) public {
+        uint currentCompanyProfileId = companyProfileId;
+        for (uint i=0; i < currentCompanyProfileId; i++) {
+            if (companyProfileVoteCount[_companyProfileVotingRound][i] == _topCompanyProfileVoteCount) {
+                topCompanyProfileIds.push(companyProfileVoteCount[companyProfileVotingRound][i]);
+            } 
+        } 
+    }
+
+    function returnTopCompanyProfileIds() public view returns(uint[] memory _topCompanyProfileIdsMemory) {
+        uint topCompanyProfileIdsLength = topCompanyProfileIds.length;
+
+        uint[] memory topCompanyProfileIdsMemory = new uint[](topCompanyProfileIdsLength);
+        topCompanyProfileIdsMemory = topCompanyProfileIds;
+        return topCompanyProfileIdsMemory;
+    }
+
 
     /***
      * @notice - Distribute fund into selected CompanyProfile by voting)
      **/
-    function distributeFunds() public {
+    function distributeFunds(address _reserve, uint16 _referralCode) public {
         // On a *whatever we decide basis* the funds are distributed to the winning project
         // E.g. every 2 weeks, the project with the most votes gets the generated interest.
 
-        require(companyProfileDeadline > now, "current vote still active");
+        require(companyProfileDeadline < now, "current vote still active");
 
-        if (topProject[companyProfileIteration] != 0) {
+        if (topProject[companyProfileVotingRound] != 0) {
             // TODO: do the payout!
         }
 
+        /// Redeem
+        address _user = address(this);
+        uint redeemAmount = aDai.balanceOf(_user);
+        uint principalBalance = aDai.principalBalanceOf(_user);
+        aDai.redeem(redeemAmount);
+
+        /// Calculate current interest income
+        uint redeemedAmount = dai.balanceOf(_user);
+        uint currentInterestIncome = redeemedAmount - principalBalance;
+
+        /// Count voting every ArtWork
+
+        /// Select winning address
+        address winningAddress;
+        winningAddress = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;  /// Wallet address for testing
+
+        /// Transfer redeemed Interest income into winning address
+        dai.approve(winningAddress, currentInterestIncome);
+        dai.transfer(winningAddress, currentInterestIncome);
+
+        /// Re-lending principal balance into AAVE
+        dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), principalBalance);
+        lendingPool.deposit(_reserve, principalBalance, _referralCode);
+
+        /// Set next voting deadline
         companyProfileDeadline = companyProfileDeadline.add(votingInterval);
 
-        companyProfileIteration = companyProfileIteration.add(1);
-        topProject[companyProfileIteration] = 0;
+        /// "companyProfileVVotingRound" is number of voting round
+        /// Set next voting round
+        /// Initialize the top project of next voting round
+        companyProfileVotingRound = companyProfileVotingRound.add(1);
+        topProject[companyProfileVotingRound] = 0;
+
+        emit DistributeFunds(redeemedAmount, principalBalance, currentInterestIncome);
     }
 
 
@@ -122,5 +208,19 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     function balanceOfContract() public view returns (uint balanceOfContract_DAI, uint balanceOfContract_ETH) {
         return (dai.balanceOf(address(this)), address(this).balance);
     }
+
+
+    /***
+     * @notice - Test Functions
+     **/    
+    function getAaveRelatedFunction() public view returns (uint redeemAmount, uint principalBalance) {
+        /// Redeem
+        address _user = address(this);
+        uint redeemAmount = aDai.balanceOf(_user);
+        uint principalBalance = aDai.principalBalanceOf(_user);
+ 
+        return (redeemAmount, principalBalance);
+    }
+    
 
 }

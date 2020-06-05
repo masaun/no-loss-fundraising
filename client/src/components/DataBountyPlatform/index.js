@@ -37,6 +37,7 @@ export default class DataBountyPlatform extends Component {
         this._balanceOfContract = this._balanceOfContract.bind(this);
 
         /////// Test Functions
+        this.getAaveRelatedFunction = this.getAaveRelatedFunction.bind(this);
         this.timestampFromDate = this.timestampFromDate.bind(this);
     }
 
@@ -47,7 +48,7 @@ export default class DataBountyPlatform extends Component {
         const { accounts, web3, dai, data_bounty_platform, DAI_ADDRESS, DATA_BOUNTY_PLATFORM_ADDRESS } = this.state;
 
         const _reserve = DAI_ADDRESS;  /// DAI(aave) on Ropsten
-        const _amount = web3.utils.toWei('0.012345', 'ether');
+        const _amount = web3.utils.toWei('1.12345', 'ether');
         const _referralCode = 0;
 
         let res1 = await dai.methods.approve(DATA_BOUNTY_PLATFORM_ADDRESS, _amount).send({ from: accounts[0] });
@@ -84,10 +85,13 @@ export default class DataBountyPlatform extends Component {
      * @notice - Distribute fund into selected CompanyProfile by voting)
      **/
     distributeFunds = async () => {
-        const { accounts, web3, dai, data_bounty_platform } = this.state;
+        const { accounts, web3, dai, data_bounty_platform, DAI_ADDRESS } = this.state;
 
-        let res = await data_bounty_platform.methods.distributeFunds().send({ from: accounts[0] });
-        console.log('=== distributeFunds() ===\n', res);        
+        const _reserve = DAI_ADDRESS;  /// DAI(aave) on Ropsten
+        const _referralCode = 0;
+
+        let res = await data_bounty_platform.methods.distributeFunds(_reserve, _referralCode).send({ from: accounts[0] });
+        console.log('=== distributeFunds() ===\n', res);         
     }
 
 
@@ -103,7 +107,14 @@ export default class DataBountyPlatform extends Component {
 
     /***
      * @notice - Test Functions
-     **/
+     **/    
+    getAaveRelatedFunction = async () => {
+        const { accounts, web3, dai, data_bounty_platform } = this.state;
+
+        const aaveRelatedResult = await data_bounty_platform.methods.getAaveRelatedFunction().call();
+        console.log('=== getAaveRelatedFunction ===', aaveRelatedResult);
+    }
+
     timestampFromDate = async () => {
         const { accounts, web3, bokkypoobahs_datetime_contract } = this.state;
 
@@ -280,6 +291,8 @@ export default class DataBountyPlatform extends Component {
                               borderColor={"#E8E8E8"}
                         >
                             <h4>Test Functions</h4> <br />
+                            <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getAaveRelatedFunction}> Get Aave Related Function </Button> <br />
+
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.timestampFromDate}> Timestamp From Date </Button> <br />
                         </Card>
                     </Grid>

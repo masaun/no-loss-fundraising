@@ -26,6 +26,7 @@ export const tokenAddressList = {
         "aETH": "0x83c59bC077D453c7734af970F07fd782afeE67b6",          /// AAVE - Uniswap Market
         "aUSDC": "0x6868abf32e68f199e5d8059a22334eefe9098e49",         /// AAVE - Uniswap Market
         "aUSDT": "0xdf4b778A8886D20754c4eD54b76f4740FbA0580c",         /// AAVE - Uniswap Market
+        "aDAI": "0x7d2512cB2bC3cCef78224428253475bDb0dEFc05",          /// AAVE - New address from result of etherscan
     },
     "Rinkeby": {
         "DAI": "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",    // DAI address on Rinkeby  
