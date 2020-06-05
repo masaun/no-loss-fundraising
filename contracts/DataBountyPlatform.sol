@@ -98,16 +98,38 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
             companyProfileVotes[companyProfileVotingRound][currentCompanyProfile] = companyProfileVotes[companyProfileVotingRound][currentCompanyProfile].sub(depositedDai[msg.sender]);
         }
 
-        companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
+        /// "companyProfileVotingRound" is what number of voting round are.
+        /// Save what voting round is / who user voted for / how much user deposited
+        companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfiles[companyProfileVotingRound][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
 
+        /// Save who user voted for  
         usersNominatedProject[companyProfileVotingRound][msg.sender] = companyProfileIdToVoteFor;
 
-        uint topProjectVotes = companyProfileVotes[companyProfileVotingRound][topProject[companyProfileVotingRound]];
+        /// Update voting count of voted companyProfileId
+        companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor].add(1);
+
+        /// Update current top project (artwork)
+        uint currentCompanyProfileId = companyProfileId;
+        uint topCompanyProfileVoteCount;
+        for (uint i=0; i < currentCompanyProfileId; i++) {
+            if (companyProfileVoteCount[companyProfileVotingRound][i] >= topCompanyProfileVoteCount) {
+                topCompanyProfileVoteCount = companyProfileVoteCount[companyProfileVotingRound][i];
+            } 
+        }
+
+        uint[] memory topCompanyProfileIds;
+        getTopCompanyProfileIds(companyProfileVotingRound, topCompanyProfileVoteCount);
+        topCompanyProfileIds = returnTopCompanyProfileIds();
 
         // TODO:: if they are equal there is a problem (we must handle this!!)
-        if (companyProfileVotes[companyProfileVotingRound][companyProfileId] > topProjectVotes) {
-            topProject[companyProfileVotingRound] = companyProfileId;
-        }
+        // if (companyProfileVotes[companyProfileVotingRound][companyProfileId] > topProjectVotes) {
+        //     topProject[companyProfileVotingRound] = companyProfileId;
+        // }
+
+        emit VoteForCompanyProfile(companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor],
+                                   companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor],
+                                   topCompanyProfileVoteCount,
+                                   topCompanyProfileIds);
     }
 
     /***

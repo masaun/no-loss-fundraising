@@ -19,6 +19,13 @@ contract McEvents {
         string companyProfileHash
     );
 
+    event VoteForCompanyProfile(
+        uint companyProfileVotes,      // For calculate deposited amount of each companyProfileId
+        uint companyProfileVoteCount,  // For counting vote of each companyProfileId
+        uint topCompanyProfileVoteCount,
+        uint[] topCompanyProfileIds
+    );
+
     event DistributeFunds(
         uint redeemedAmount, 
         uint principalBalance, 
