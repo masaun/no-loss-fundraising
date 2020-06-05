@@ -132,6 +132,25 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
                                    topCompanyProfileIds);
     }
 
+    /// Need to execute for-loop in frontend to get TopCompanyProfileIds
+    function getTopCompanyProfileIds(uint _companyProfileVotingRound, uint _topCompanyProfileVoteCount) public {
+        uint currentCompanyProfileId = companyProfileId;
+        for (uint i=0; i < currentCompanyProfileId; i++) {
+            if (companyProfileVoteCount[_companyProfileVotingRound][i] == _topCompanyProfileVoteCount) {
+                topCompanyProfileIds.push(companyProfileVoteCount[companyProfileVotingRound][i]);
+            } 
+        } 
+    }
+
+    function returnTopCompanyProfileIds() public view returns(uint[] memory _topCompanyProfileIdsMemory) {
+        uint topCompanyProfileIdsLength = topCompanyProfileIds.length;
+
+        uint[] memory topCompanyProfileIdsMemory = new uint[](topCompanyProfileIdsLength);
+        topCompanyProfileIdsMemory = topCompanyProfileIds;
+        return topCompanyProfileIdsMemory;
+    }
+
+
     /***
      * @notice - Distribute fund into selected CompanyProfile by voting)
      **/
