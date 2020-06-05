@@ -25,8 +25,10 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     using SafeMath for uint;
 
     uint companyProfileId;
+    uint newCompanyProfileId;
     uint companyProfileVotingRound;
     uint totalDepositedDai;
+    uint[] topCompanyProfileIds;
 
     IERC20 public dai;
     ILendingPool public lendingPool;
@@ -72,16 +74,17 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
      **/
     function createCompanyProfile(string memory companyProfileHash) public returns (uint newCompanyProfileId) {
         // The first company profile will have an ID of 1
-        newCompanyProfileId = companyProfileId.add(1);
+        newCompanyProfileId = companyProfileId++;
+        //newCompanyProfileId = companyProfileId.add(1);
 
         companyProfileOwner[newCompanyProfileId] = msg.sender;
         companyProfileState[newCompanyProfileId] = CompanyProfileState.Active;
         companyProfileDetails[newCompanyProfileId] = companyProfileHash;
 
         emit CreateCompanyProfile(newCompanyProfileId, 
-                           companyProfileOwner[newCompanyProfileId], 
-                           companyProfileState[newCompanyProfileId], 
-                           companyProfileDetails[newCompanyProfileId]);
+                                  companyProfileOwner[newCompanyProfileId], 
+                                  companyProfileState[newCompanyProfileId], 
+                                  companyProfileDetails[newCompanyProfileId]);
     }
 
     /***
