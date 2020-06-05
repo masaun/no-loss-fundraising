@@ -85,10 +85,13 @@ export default class DataBountyPlatform extends Component {
      * @notice - Distribute fund into selected CompanyProfile by voting)
      **/
     distributeFunds = async () => {
-        const { accounts, web3, dai, data_bounty_platform } = this.state;
+        const { accounts, web3, dai, data_bounty_platform, DAI_ADDRESS } = this.state;
 
-        let res = await data_bounty_platform.methods.distributeFunds().send({ from: accounts[0] });
-        console.log('=== distributeFunds() ===\n', res);        
+        const _reserve = DAI_ADDRESS;  /// DAI(aave) on Ropsten
+        const _referralCode = 0;
+
+        let res = await data_bounty_platform.methods.distributeFunds(_reserve, _referralCode).send({ from: accounts[0] });
+        console.log('=== distributeFunds() ===\n', res);         
     }
 
 

@@ -174,9 +174,26 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         uint redeemedAmount = dai.balanceOf(_user);
         uint currentInterestIncome = redeemedAmount - principalBalance;
 
+        /// Count voting every ArtWork
+
+        /// Select winning address
+        address winningAddress;
+        winningAddress = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;  /// Wallet address for testing
+
+        /// Transfer redeemed Interest income into winning address
+        dai.approve(winningAddress, currentInterestIncome);
+        dai.transfer(winningAddress, currentInterestIncome);
+
+        /// Re-lending principal balance into AAVE
+        dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), principalBalance);
+        lendingPool.deposit(_reserve, principalBalance, _referralCode);
+
         /// Set next voting deadline
         companyProfileDeadline = companyProfileDeadline.add(votingInterval);
 
+        /// "companyProfileVVotingRound" is number of voting round
+        /// Set next voting round
+        /// Initialize the top project of next voting round
         companyProfileVotingRound = companyProfileVotingRound.add(1);
         topProject[companyProfileVotingRound] = 0;
 
