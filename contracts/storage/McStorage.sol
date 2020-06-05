@@ -9,19 +9,14 @@ import "./McEvents.sol";
 contract McStorage is McObjects, McEvents {
 
     ///////////////////////////////////
-    // @dev - Define as memory
+    // @dev - This is only variable which value are assigned in "constructor"
     ///////////////////////////////////
-    uint totalDepositedDai;
-    
-    uint companyProfileId;
-    uint companyProfileIteration;
-
     uint votingInterval;
     uint companyProfileDeadline;
 
     
     //////////////////////////////////
-    // @dev - Define as storage
+    // @dev - Define as mapping
     ///////////////////////////////////
     mapping (address => uint) depositedDai;
 
