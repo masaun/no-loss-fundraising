@@ -25,7 +25,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     using SafeMath for uint;
 
     uint companyProfileId;
-    uint companyProfileIteration;
+    uint companyProfileVotingRound;
     uint totalDepositedDai;
 
     IERC20 public dai;
@@ -90,20 +90,20 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     function voteForCompanyProfile(uint256 companyProfileIdToVoteFor) public {
         // Can only vote if they joined a previous iteration round...
         // Check if the msg.sender has given approval rights to our steward to vote on their behalf
-        uint currentCompanyProfile = usersNominatedProject[companyProfileIteration][msg.sender];
+        uint currentCompanyProfile = usersNominatedProject[companyProfileVotingRound][msg.sender];
         if (currentCompanyProfile != 0) {
-            companyProfileVotes[companyProfileIteration][currentCompanyProfile] = companyProfileVotes[companyProfileIteration][currentCompanyProfile].sub(depositedDai[msg.sender]);
+            companyProfileVotes[companyProfileVotingRound][currentCompanyProfile] = companyProfileVotes[companyProfileVotingRound][currentCompanyProfile].sub(depositedDai[msg.sender]);
         }
 
-        companyProfileVotes[companyProfileIteration][companyProfileIdToVoteFor] = companyProfileVotes[companyProfileIteration][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
+        companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
 
-        usersNominatedProject[companyProfileIteration][msg.sender] = companyProfileIdToVoteFor;
+        usersNominatedProject[companyProfileVotingRound][msg.sender] = companyProfileIdToVoteFor;
 
-        uint topProjectVotes = companyProfileVotes[companyProfileIteration][topProject[companyProfileIteration]];
+        uint topProjectVotes = companyProfileVotes[companyProfileVotingRound][topProject[companyProfileVotingRound]];
 
         // TODO:: if they are equal there is a problem (we must handle this!!)
-        if (companyProfileVotes[companyProfileIteration][companyProfileId] > topProjectVotes) {
-            topProject[companyProfileIteration] = companyProfileId;
+        if (companyProfileVotes[companyProfileVotingRound][companyProfileId] > topProjectVotes) {
+            topProject[companyProfileVotingRound] = companyProfileId;
         }
     }
 
@@ -116,7 +116,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
         require(companyProfileDeadline < now, "current vote still active");
 
-        if (topProject[companyProfileIteration] != 0) {
+        if (topProject[companyProfileVotingRound] != 0) {
             // TODO: do the payout!
         }
 
@@ -133,8 +133,8 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         /// Set next voting deadline
         companyProfileDeadline = companyProfileDeadline.add(votingInterval);
 
-        companyProfileIteration = companyProfileIteration.add(1);
-        topProject[companyProfileIteration] = 0;
+        companyProfileVotingRound = companyProfileVotingRound.add(1);
+        topProject[companyProfileVotingRound] = 0;
 
         emit DistributeFunds(redeemedAmount, principalBalance, currentInterestIncome);
     }
