@@ -100,7 +100,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
         /// "companyProfileVotingRound" is what number of voting round are.
         /// Save what voting round is / who user voted for / how much user deposited
-        companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfiles[companyProfileVotingRound][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
+        companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor].add(depositedDai[msg.sender]);
 
         /// Save who user voted for  
         usersNominatedProject[companyProfileVotingRound][msg.sender] = companyProfileIdToVoteFor;
@@ -154,7 +154,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     /***
      * @notice - Distribute fund into selected CompanyProfile by voting)
      **/
-    function distributeFunds() public {
+    function distributeFunds(address _reserve, uint16 _referralCode) public {
         // On a *whatever we decide basis* the funds are distributed to the winning project
         // E.g. every 2 weeks, the project with the most votes gets the generated interest.
 

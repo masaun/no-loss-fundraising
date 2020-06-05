@@ -27,4 +27,6 @@ contract McStorage is McObjects, McEvents {
     mapping(uint256 => mapping(address => uint256)) public usersNominatedProject; // Means user can only have one project.
     mapping(uint256 => mapping(uint256 => uint256)) public companyProfileVotes;
     mapping(uint256 => uint256) public topProject;
+
+    mapping(uint256 => mapping(uint256 => uint256)) public companyProfileVoteCount;  // For counting vote of each companyProfileId
 }
