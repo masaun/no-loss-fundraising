@@ -139,7 +139,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         uint currentCompanyProfileId = companyProfileId;
         for (uint i=0; i < currentCompanyProfileId; i++) {
             if (companyProfileVoteCount[_companyProfileVotingRound][i] == _topCompanyProfileVoteCount) {
-                topCompanyProfileIds.push(companyProfileVoteCount[companyProfileVotingRound][i]);
+                topCompanyProfileIds.push(i);
             } 
         } 
     }
