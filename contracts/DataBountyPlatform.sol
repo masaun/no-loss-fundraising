@@ -133,7 +133,9 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
         uint[] memory topCompanyProfileIds;
         getTopCompanyProfileIds(companyProfileVotingRound, topCompanyProfileVoteCount);
-        topCompanyProfileIds = returnTopCompanyProfileIds(companyProfileVotingRound);  
+        topCompanyProfileIds = returnTopCompanyProfileIds(companyProfileVotingRound); 
+
+        return (topCompanyProfileVoteCount, topCompanyProfileIds); 
     }
 
     /// Need to execute for-loop in frontend to get TopCompanyProfileIds
