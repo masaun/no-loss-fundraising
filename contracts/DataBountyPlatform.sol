@@ -190,15 +190,19 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         for (uint i=0; i < topCompanyProfileIds.length; i++) {
             if (i == 0) {
                 address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, i);
-                address winningAddress;
-                dai.approve(winningAddress, currentInterestIncome);
-                dai.transfer(winningAddress, currentInterestIncome);
+                for (uint w=0; w < winningAddressList.length; w++) {
+                    address winningAddress = winningAddressList[w];
+                    dai.approve(winningAddress, currentInterestIncome);
+                    dai.transfer(winningAddress, currentInterestIncome);
+                }
             } else if (i > 0) {
                 if (topCompanyProfileIds[i] != topCompanyProfileIds[i-1]) {
                     address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, i);
-                    address winningAddress;
-                    dai.approve(winningAddress, currentInterestIncome);
-                    dai.transfer(winningAddress, currentInterestIncome);                    
+                    for (uint w=0; w < winningAddressList.length; w++) {
+                        address winningAddress = winningAddressList[w];
+                        dai.approve(winningAddress, currentInterestIncome);
+                        dai.transfer(winningAddress, currentInterestIncome);
+                    }                  
                 }
             }
         }
@@ -210,7 +214,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         /// Set next voting deadline
         companyProfileDeadline = companyProfileDeadline.add(votingInterval);
 
-        /// "companyProfileVVotingRound" is number of voting round
+        /// "companyProfileVotingRound" is number of voting round
         /// Set next voting round
         /// Initialize the top project of next voting round
         companyProfileVotingRound = companyProfileVotingRound.add(1);
