@@ -194,6 +194,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
                     address winningAddress = winningAddressList[w];
                     dai.approve(winningAddress, currentInterestIncome);
                     dai.transfer(winningAddress, currentInterestIncome);
+                    emit WinningAddressTransferred(winningAddress);
                 }
             } else if (i > 0) {
                 if (topCompanyProfileIds[i] != topCompanyProfileIds[i-1]) {
@@ -202,7 +203,8 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
                         address winningAddress = winningAddressList[w];
                         dai.approve(winningAddress, currentInterestIncome);
                         dai.transfer(winningAddress, currentInterestIncome);
-                    }                  
+                        emit WinningAddressTransferred(winningAddress);
+                    }
                 }
             }
         }
