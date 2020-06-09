@@ -205,6 +205,8 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
                         dai.transfer(winningAddress, currentInterestIncome);
                         emit WinningAddressTransferred(winningAddress);
                     }
+                } else {
+                    emit NoWinningAddressTransferred("No winningAddress transferred");
                 }
             }
         }

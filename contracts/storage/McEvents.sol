@@ -36,6 +36,8 @@ contract McEvents {
         address winningAddress
     );
 
-
+    event NoWinningAddressTransferred(
+        string notificationMessage
+    );
 
 }
