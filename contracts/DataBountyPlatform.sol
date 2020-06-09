@@ -219,9 +219,9 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         emit DistributeFunds(redeemedAmount, principalBalance, currentInterestIncome);
     }
 
-    function returnWinningAddressList(uint _companyProfileVotingRound, uint _votedCompanyProfileId) public view returns(uint[] memory _winningAddressListMemory) {
+    function returnWinningAddressList(uint _companyProfileVotingRound, uint _votedCompanyProfileId) public view returns(address[] memory _winningAddressListMemory) {
         uint winningAddressListLength = votedUserAddress[_companyProfileVotingRound][_votedCompanyProfileId].length;
-        uint[] memory winningAddressListMemory = new uint[](winningAddressListLength);
+        address[] memory winningAddressListMemory = new address[](winningAddressListLength);
         winningAddressListMemory = votedUserAddress[_companyProfileVotingRound][_votedCompanyProfileId];
         return winningAddressListMemory;
     }
