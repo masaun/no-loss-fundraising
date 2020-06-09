@@ -1,9 +1,9 @@
 export const tokenAddressList = {
 	"Kovan": {
 		"DAI": "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa",    // DAI address on Kovan  
-		"cDAI": "0xe7bc397dbd069fc7d0109c0636d06888bb50668c",   // cDAI address on Kovan
-        "aDAI": "",
-        "UNItoken": "",
+        "DAIaave": "0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD", // DAI address on Kovan（from AAVE fancet）
+        "cDAI": "0xe7bc397dbd069fc7d0109c0636d06888bb50668c",    // cDAI address on Kovan   
+        "aDAI": "0x58AD4cB396411B691A9AAb6F74545b2C5217FE6a",    // AAVE - New address from result of etherscan
 	},
     "Ropsten": {
         "ETH": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",    // ETH address
