@@ -186,12 +186,25 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         (topCompanyProfileVoteCount, topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
 
         /// Select winning address
-        address winningAddress;
-        winningAddress = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;  /// Wallet address for testing
+        //address winningAddress;
+        //winningAddress = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;  /// Wallet address for testing
 
         /// Transfer redeemed Interest income into winning address
-        dai.approve(winningAddress, currentInterestIncome);
-        dai.transfer(winningAddress, currentInterestIncome);
+        for (uint i=0; i < topCompanyProfileIds.length; i++) {
+            if (i == 0) {
+                address winningAddress = i;
+                dai.approve(winningAddress, currentInterestIncome);
+                dai.transfer(winningAddress, currentInterestIncome);
+            } else if (i > 0) {
+                if (topCompanyProfileIds[i] != topCompanyProfileIds[i-1]) {
+                    address winningAddress = i;
+                    dai.approve(winningAddress, currentInterestIncome);
+                    dai.transfer(winningAddress, currentInterestIncome);                    
+                }
+            }
+        }
+        //dai.approve(winningAddress, currentInterestIncome);
+        //dai.transfer(winningAddress, currentInterestIncome);
 
         /// Re-lending principal balance into AAVE
         dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), principalBalance);
