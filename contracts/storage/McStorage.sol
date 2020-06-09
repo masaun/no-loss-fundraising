@@ -25,8 +25,9 @@ contract McStorage is McObjects, McEvents {
     mapping (uint => CompanyProfileState) public companyProfileState; // Company profile Id to current state
 
     mapping (uint => mapping(address => uint)) public usersNominatedProject; // Means user can only have one project.
-    mapping (uint => mapping(uint256 => uint)) public companyProfileVotes;
-    mapping (uint => uint) public topProject;
+    mapping (uint => mapping(uint => address[])) votedUserAddress;
+    
+    mapping (uint => mapping(uint => uint)) public companyProfileVotes;
 
     mapping (uint => mapping(uint => uint)) public companyProfileVoteCount;  // For counting vote of each companyProfileId
 }
