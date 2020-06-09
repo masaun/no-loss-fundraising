@@ -28,8 +28,9 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     uint newCompanyProfileId;
     uint companyProfileVotingRound;
     uint totalDepositedDai;
-    mapping (uint => uint[]) topCompanyProfileIds;  /// Key is "companyProfileRound"
-    uint topCompanyProfileVoteCount;
+    mapping (uint => uint[]) topCompanyProfileIds;      /// Key is "companyProfileRound"
+    mapping (uint => uint) topCompanyProfileVoteCount;  /// Key is "companyProfileRound"
+    //uint topCompanyProfileVoteCount;    
 
 
     IERC20 public dai;
@@ -107,6 +108,9 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         /// Save who user voted for  
         usersNominatedProject[companyProfileVotingRound][msg.sender] = companyProfileIdToVoteFor;
 
+        /// Save voted user address
+        votedUserAddress[companyProfileVotingRound][companyProfileIdToVoteFor].push(msg.sender);
+
         /// Update voting count of voted companyProfileId
         companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor].add(1);
 
@@ -121,21 +125,21 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
                                    _topCompanyProfileIds);
     }
 
-    function getTopCompanyProfile(uint companyProfileVotingRound) public returns (uint ttopCompanyProfileVoteCount, uint[] memory topCompanyProfileIds) {
+    function getTopCompanyProfile(uint companyProfileVotingRound) public returns (uint _topCompanyProfileVoteCount, uint[] memory topCompanyProfileIds) {
         /// Update current top project (artwork)
         uint currentCompanyProfileId = companyProfileId;
-        uint topCompanyProfileVoteCount;
+        uint _topCompanyProfileVoteCount = topCompanyProfileVoteCount[companyProfileVotingRound];
         for (uint i=0; i < currentCompanyProfileId; i++) {
-            if (companyProfileVoteCount[companyProfileVotingRound][i] >= topCompanyProfileVoteCount) {
-                topCompanyProfileVoteCount = companyProfileVoteCount[companyProfileVotingRound][i];
+            if (companyProfileVoteCount[companyProfileVotingRound][i] >= _topCompanyProfileVoteCount) {
+                topCompanyProfileVoteCount[companyProfileVotingRound] = companyProfileVoteCount[companyProfileVotingRound][i];
             } 
         }
 
         uint[] memory topCompanyProfileIds;
-        getTopCompanyProfileIds(companyProfileVotingRound, topCompanyProfileVoteCount);
+        getTopCompanyProfileIds(companyProfileVotingRound, topCompanyProfileVoteCount[companyProfileVotingRound]);
         topCompanyProfileIds = returnTopCompanyProfileIds(companyProfileVotingRound); 
 
-        return (topCompanyProfileVoteCount, topCompanyProfileIds); 
+        return (topCompanyProfileVoteCount[companyProfileVotingRound], topCompanyProfileIds); 
     }
 
     /// Need to execute for-loop in frontend to get TopCompanyProfileIds
@@ -166,10 +170,6 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
         require(companyProfileDeadline < now, "current vote still active");
 
-        if (topProject[companyProfileVotingRound] != 0) {
-            // TODO: do the payout!
-        }
-
         /// Redeem
         address _user = address(this);
         uint redeemAmount = aDai.balanceOf(_user);
@@ -181,17 +181,33 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         uint currentInterestIncome = redeemedAmount - principalBalance;
 
         /// Count voting every CompanyProfile
-        uint topCompanyProfileVoteCount;
+        uint _topCompanyProfileVoteCount;
         uint[] memory topCompanyProfileIds;
-        (topCompanyProfileVoteCount, topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
+        (_topCompanyProfileVoteCount, topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
 
         /// Select winning address
-        address winningAddress;
-        winningAddress = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;  /// Wallet address for testing
-
         /// Transfer redeemed Interest income into winning address
-        dai.approve(winningAddress, currentInterestIncome);
-        dai.transfer(winningAddress, currentInterestIncome);
+        for (uint i=0; i < topCompanyProfileIds.length; i++) {
+            if (i == 0) {
+                address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, i);
+                for (uint w=0; w < winningAddressList.length; w++) {
+                    address winningAddress = winningAddressList[w];
+                    dai.approve(winningAddress, currentInterestIncome);
+                    dai.transfer(winningAddress, currentInterestIncome);
+                    emit WinningAddressTransferred(winningAddress);
+                }
+            } else if (i > 0) {
+                if (topCompanyProfileIds[i] != topCompanyProfileIds[i-1]) {
+                    address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, i);
+                    for (uint w=0; w < winningAddressList.length; w++) {
+                        address winningAddress = winningAddressList[w];
+                        dai.approve(winningAddress, currentInterestIncome);
+                        dai.transfer(winningAddress, currentInterestIncome);
+                        emit WinningAddressTransferred(winningAddress);
+                    }
+                }
+            }
+        }
 
         /// Re-lending principal balance into AAVE
         dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), principalBalance);
@@ -200,15 +216,21 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         /// Set next voting deadline
         companyProfileDeadline = companyProfileDeadline.add(votingInterval);
 
-        /// "companyProfileVVotingRound" is number of voting round
+        /// "companyProfileVotingRound" is number of voting round
         /// Set next voting round
         /// Initialize the top project of next voting round
         companyProfileVotingRound = companyProfileVotingRound.add(1);
-        topProject[companyProfileVotingRound] = 0;
+        topCompanyProfileVoteCount[companyProfileVotingRound] = 0;
 
         emit DistributeFunds(redeemedAmount, principalBalance, currentInterestIncome);
     }
 
+    function returnWinningAddressList(uint _companyProfileVotingRound, uint _votedCompanyProfileId) public view returns(address[] memory _winningAddressListMemory) {
+        uint winningAddressListLength = votedUserAddress[_companyProfileVotingRound][_votedCompanyProfileId].length;
+        address[] memory winningAddressListMemory = new address[](winningAddressListLength);
+        winningAddressListMemory = votedUserAddress[_companyProfileVotingRound][_votedCompanyProfileId];
+        return winningAddressListMemory;
+    }
 
 
     /***

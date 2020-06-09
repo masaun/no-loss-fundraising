@@ -20,13 +20,14 @@ contract McStorage is McObjects, McEvents {
     ///////////////////////////////////
     mapping (address => uint) depositedDai;
 
-    mapping (uint256 => address) public companyProfileOwner;
-    mapping (uint256 => string) public companyProfileDetails;
-    mapping (uint256 => CompanyProfileState) public companyProfileState; // Company profile Id to current state
+    mapping (uint => address) public companyProfileOwner;
+    mapping (uint => string) public companyProfileDetails;
+    mapping (uint => CompanyProfileState) public companyProfileState; // Company profile Id to current state
 
-    mapping (uint256 => mapping(address => uint256)) public usersNominatedProject; // Means user can only have one project.
-    mapping (uint256 => mapping(uint256 => uint256)) public companyProfileVotes;
-    mapping (uint256 => uint256) public topProject;
+    mapping (uint => mapping(address => uint)) public usersNominatedProject; // Means user can only have one project.
+    mapping (uint => mapping(uint => address[])) votedUserAddress;
+    
+    mapping (uint => mapping(uint => uint)) public companyProfileVotes;
 
-    mapping (uint256 => mapping(uint256 => uint256)) public companyProfileVoteCount;  // For counting vote of each companyProfileId
+    mapping (uint => mapping(uint => uint)) public companyProfileVoteCount;  // For counting vote of each companyProfileId
 }
