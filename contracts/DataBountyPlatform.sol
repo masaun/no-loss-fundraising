@@ -133,7 +133,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
         uint[] memory topCompanyProfileIds;
         getTopCompanyProfileIds(companyProfileVotingRound, topCompanyProfileVoteCount);
-        topCompanyProfileIds = returnTopCompanyProfileIds();  
+        topCompanyProfileIds = returnTopCompanyProfileIds(companyProfileVotingRound);  
     }
 
     /// Need to execute for-loop in frontend to get TopCompanyProfileIds
@@ -141,16 +141,16 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         uint currentCompanyProfileId = companyProfileId;
         for (uint i=0; i < currentCompanyProfileId; i++) {
             if (companyProfileVoteCount[_companyProfileVotingRound][i] == _topCompanyProfileVoteCount) {
-                topCompanyProfileIds.push(i);
+                topCompanyProfileIds[_companyProfileVotingRound].push(i);
             } 
         } 
     }
 
-    function returnTopCompanyProfileIds() public view returns(uint[] memory _topCompanyProfileIdsMemory) {
-        uint topCompanyProfileIdsLength = topCompanyProfileIds.length;
+    function returnTopCompanyProfileIds(uint _companyProfileVotingRound) public view returns(uint[] memory _topCompanyProfileIdsMemory) {
+        uint topCompanyProfileIdsLength = topCompanyProfileIds[_companyProfileVotingRound].length;
 
         uint[] memory topCompanyProfileIdsMemory = new uint[](topCompanyProfileIdsLength);
-        topCompanyProfileIdsMemory = topCompanyProfileIds;
+        topCompanyProfileIdsMemory = topCompanyProfileIds[_companyProfileVotingRound];
         return topCompanyProfileIdsMemory;
     }
 
