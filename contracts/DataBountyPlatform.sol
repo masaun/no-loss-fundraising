@@ -109,6 +109,18 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor].add(1);
 
         /// Update current top project (artwork)
+        uint topCompanyProfileVoteCount;
+        uint[] memory topCompanyProfileIds;
+        (topCompanyProfileVoteCount, topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
+
+        emit VoteForCompanyProfile(companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor],
+                                   companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor],
+                                   topCompanyProfileVoteCount,
+                                   topCompanyProfileIds);
+    }
+
+    function getTopCompanyProfile(uint companyProfileVotingRound) public returns (uint ttopCompanyProfileVoteCount, uint[] memory topCompanyProfileIds) {
+        /// Update current top project (artwork)
         uint currentCompanyProfileId = companyProfileId;
         uint topCompanyProfileVoteCount;
         for (uint i=0; i < currentCompanyProfileId; i++) {
@@ -119,17 +131,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
         uint[] memory topCompanyProfileIds;
         getTopCompanyProfileIds(companyProfileVotingRound, topCompanyProfileVoteCount);
-        topCompanyProfileIds = returnTopCompanyProfileIds();
-
-        // TODO:: if they are equal there is a problem (we must handle this!!)
-        // if (companyProfileVotes[companyProfileVotingRound][companyProfileId] > topProjectVotes) {
-        //     topProject[companyProfileVotingRound] = companyProfileId;
-        // }
-
-        emit VoteForCompanyProfile(companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor],
-                                   companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor],
-                                   topCompanyProfileVoteCount,
-                                   topCompanyProfileIds);
+        topCompanyProfileIds = returnTopCompanyProfileIds();  
     }
 
     /// Need to execute for-loop in frontend to get TopCompanyProfileIds
@@ -174,7 +176,10 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         uint redeemedAmount = dai.balanceOf(_user);
         uint currentInterestIncome = redeemedAmount - principalBalance;
 
-        /// Count voting every ArtWork
+        /// Count voting every CompanyProfile
+        uint topCompanyProfileVoteCount;
+        uint[] memory topCompanyProfileIds;
+        (topCompanyProfileVoteCount, topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
 
         /// Select winning address
         address winningAddress;
