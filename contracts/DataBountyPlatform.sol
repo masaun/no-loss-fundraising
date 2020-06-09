@@ -28,7 +28,9 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     uint newCompanyProfileId;
     uint companyProfileVotingRound;
     uint totalDepositedDai;
-    uint[] topCompanyProfileIds;
+    mapping (uint => uint[]) topCompanyProfileIds;  /// Key is "companyProfileRound"
+    uint topCompanyProfileVoteCount;
+
 
     IERC20 public dai;
     ILendingPool public lendingPool;
@@ -109,14 +111,14 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor].add(1);
 
         /// Update current top project (artwork)
-        uint topCompanyProfileVoteCount;
-        uint[] memory topCompanyProfileIds;
-        (topCompanyProfileVoteCount, topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
+        uint _topCompanyProfileVoteCount;
+        uint[] memory _topCompanyProfileIds;
+        (_topCompanyProfileVoteCount, _topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
 
         emit VoteForCompanyProfile(companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor],
                                    companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor],
-                                   topCompanyProfileVoteCount,
-                                   topCompanyProfileIds);
+                                   _topCompanyProfileVoteCount,
+                                   _topCompanyProfileIds);
     }
 
     function getTopCompanyProfile(uint companyProfileVotingRound) public returns (uint ttopCompanyProfileVoteCount, uint[] memory topCompanyProfileIds) {
