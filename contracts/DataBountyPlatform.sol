@@ -119,7 +119,8 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         uint[] memory _topCompanyProfileIds;
         (_topCompanyProfileVoteCount, _topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
 
-        emit VoteForCompanyProfile(companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor],
+        emit VoteForCompanyProfile(companyProfileVotingRound,
+                                   companyProfileVotes[companyProfileVotingRound][companyProfileIdToVoteFor],
                                    companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor],
                                    _topCompanyProfileVoteCount,
                                    _topCompanyProfileIds);
