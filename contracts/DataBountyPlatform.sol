@@ -201,8 +201,8 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
             if (i == 0) {
                 address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, topCompanyProfileIds[i]);
                 emit ReturnWinningAddressList(winningAddressList);
-                uint numberOfWinningAddress = 1;
-                //uint numberOfWinningAddress = winningAddressList.length;
+                //uint numberOfWinningAddress = 1;
+                uint numberOfWinningAddress = winningAddressList.length;
                 uint dividedInterestIncome = currentInterestIncome.div(numberOfWinningAddress);
                 if (numberOfWinningAddress != 0) {
                     for (uint w=0; w < winningAddressList.length; w++) {
