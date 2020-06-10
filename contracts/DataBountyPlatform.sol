@@ -190,14 +190,20 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         /// Transfer redeemed Interest income into winning address
         for (uint i=0; i < topCompanyProfileIds.length; i++) {
             address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, i);
-            uint numberOfWinningAddress = winningAddressList.length;
-            uint dividedInterestIncome = currentInterestIncome.div(numberOfWinningAddress);
-            for (uint w=0; w < winningAddressList.length; w++) {
-                address winningAddress = winningAddressList[w];
-                dai.approve(winningAddress, dividedInterestIncome);
-                dai.transfer(winningAddress, dividedInterestIncome);
-                emit WinningAddressTransferred(winningAddress);
-            }
+            emit ReturnWinningAddressList(winningAddressList);
+            //address winningAddress = winningAddressList[1];
+            //dai.approve(winningAddress, currentInterestIncome);
+            //dai.transfer(winningAddress, currentInterestIncome);
+            //emit WinningAddressTransferred(winningAddress);
+            
+            // uint numberOfWinningAddress = winningAddressList.length;
+            // uint dividedInterestIncome = currentInterestIncome.div(numberOfWinningAddress);
+            // for (uint w=0; w < winningAddressList.length; w++) {
+            //     address winningAddress = winningAddressList[w];
+            //     dai.approve(winningAddress, dividedInterestIncome);
+            //     dai.transfer(winningAddress, dividedInterestIncome);
+            //     emit WinningAddressTransferred(winningAddress);
+            // }
         }
         // for (uint i=0; i < topCompanyProfileIds.length; i++) {
         //     if (i == 0) {

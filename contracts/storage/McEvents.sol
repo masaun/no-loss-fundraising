@@ -33,6 +33,11 @@ contract McEvents {
         uint currentInterestIncome
     );
 
+    event ReturnWinningAddressList(
+        address[] winningAddressList
+    );
+    
+
     event WinningAddressTransferred(
         address winningAddress
     );
