@@ -188,55 +188,60 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
         /// Select winning address
         /// Transfer redeemed Interest income into winning address
-        address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, 1);
-        emit ReturnWinningAddressList(winningAddressList);
-        address winningAddress = winningAddressList[0];
-        uint numberOfWinningAddress = 1;
-        uint dividedInterestIncome = currentInterestIncome.div(numberOfWinningAddress);
-        dai.approve(winningAddress, dividedInterestIncome);
-        dai.transfer(winningAddress, dividedInterestIncome);
-        emit WinningAddressTransferred(winningAddress);
+        // address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, 1);
+        // emit ReturnWinningAddressList(winningAddressList);
+        // address winningAddress = winningAddressList[0];
+        // uint numberOfWinningAddress = 1;
+        // uint dividedInterestIncome = currentInterestIncome.div(numberOfWinningAddress);
+        // dai.approve(winningAddress, dividedInterestIncome);
+        // dai.transfer(winningAddress, dividedInterestIncome);
+        // emit WinningAddressTransferred(winningAddress);
 
-
-        // for (uint i=0; i < topCompanyProfileIds.length; i++) {
-        //     address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, i);
-        //     emit ReturnWinningAddressList(winningAddressList);
-        //     uint numberOfWinningAddress = winningAddressList.length;
-        //     uint dividedInterestIncome = currentInterestIncome.div(numberOfWinningAddress);
-        //     if (numberOfWinningAddress != 0) {
-        //         for (uint w=0; w < winningAddressList.length; w++) {
-        //             if (winningAddressList[w] != winningAddressList[w-1]) {
-        //                 address winningAddress = winningAddressList[w];
-        //                 dai.approve(winningAddress, dividedInterestIncome);
-        //                 dai.transfer(winningAddress, dividedInterestIncome);
-        //                 emit WinningAddressTransferred(winningAddress);
-        //             }
-        //         }
-        //     }
-        // }
-
-        // for (uint i=0; i < topCompanyProfileIds.length; i++) {
-        //     if (i == 0) {
-        //         address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, 1);
-        //         emit ReturnWinningAddressList(winningAddressList);
-        //         address winningAddress = winningAddressList[0];
-        //         dai.approve(winningAddress, currentInterestIncome);
-        //         dai.transfer(winningAddress, currentInterestIncome);
-        //         emit WinningAddressTransferred(winningAddress);
-        //     } else if (i > 0) {
-        //         if (topCompanyProfileIds[i] != topCompanyProfileIds[i-1]) {
-        //             address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, i);
-        //             for (uint w=0; w < winningAddressList.length; w++) {
-        //                 address winningAddress = winningAddressList[w];
-        //                 dai.approve(winningAddress, currentInterestIncome);
-        //                 dai.transfer(winningAddress, currentInterestIncome);
-        //                 emit WinningAddressTransferred(winningAddress);
-        //             }
-        //         } else {
-        //             emit NoWinningAddressTransferred("No winningAddress transferred");
-        //         }
-        //     }
-        // }
+        for (uint i=0; i < topCompanyProfileIds.length; i++) {
+            if (i == 0) {
+                address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, topCompanyProfileIds[i]);
+                emit ReturnWinningAddressList(winningAddressList);
+                uint numberOfWinningAddress = 1;
+                //uint numberOfWinningAddress = winningAddressList.length;
+                uint dividedInterestIncome = currentInterestIncome.div(numberOfWinningAddress);
+                if (numberOfWinningAddress != 0) {
+                    for (uint w=0; w < winningAddressList.length; w++) {
+                        if (w == 0) {
+                            address winningAddress = winningAddressList[w];
+                            dai.approve(winningAddress, dividedInterestIncome);
+                            dai.transfer(winningAddress, dividedInterestIncome);
+                            emit WinningAddressTransferred(winningAddress);
+                        } else if (w > 0) {
+                            if (winningAddressList[w] != winningAddressList[w-1]) {
+                                address winningAddress = winningAddressList[w];
+                                dai.approve(winningAddress, dividedInterestIncome);
+                                dai.transfer(winningAddress, dividedInterestIncome);
+                                emit WinningAddressTransferred(winningAddress);
+                            }
+                        }
+                    }
+                }
+            } else if (i > 0) {
+                // if (topCompanyProfileIds[i] != topCompanyProfileIds[i-1]) {
+                //     address[] memory winningAddressList = returnWinningAddressList(companyProfileVotingRound, topCompanyProfileIds[i]);
+                //     emit ReturnWinningAddressList(winningAddressList);
+                //     uint numberOfWinningAddress = winningAddressList.length;
+                //     uint dividedInterestIncome = currentInterestIncome.div(numberOfWinningAddress);
+                //     if (numberOfWinningAddress != 0) {
+                //         for (uint w=0; w < winningAddressList.length; w++) {
+                //             if (winningAddressList[w] != winningAddressList[w-1]) {
+                //                 address winningAddress = winningAddressList[w];
+                //                 dai.approve(winningAddress, dividedInterestIncome);
+                //                 dai.transfer(winningAddress, dividedInterestIncome);
+                //                 emit WinningAddressTransferred(winningAddress);
+                //             }
+                //         }
+                //     } else {
+                //         emit NoWinningAddressTransferred("No winningAddress transferred");
+                //     }               
+                // }
+            }
+        }
 
         /// Re-lending principal balance into AAVE
         dai.approve(lendingPoolAddressesProvider.getLendingPoolCore(), principalBalance);
