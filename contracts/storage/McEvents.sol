@@ -20,6 +20,7 @@ contract McEvents {
     );
 
     event VoteForCompanyProfile(
+        uint currentCompanyProfileVotingRound,  // For chekcing current voting round
         uint companyProfileVotes,      // For calculate deposited amount of each companyProfileId
         uint companyProfileVoteCount,  // For counting vote of each companyProfileId
         uint topCompanyProfileVoteCount,
@@ -32,10 +33,17 @@ contract McEvents {
         uint currentInterestIncome
     );
 
+    event ReturnWinningAddressList(
+        address[] winningAddressList
+    );
+    
+
     event WinningAddressTransferred(
         address winningAddress
     );
 
-
+    event NoWinningAddressTransferred(
+        string notificationMessage
+    );
 
 }
