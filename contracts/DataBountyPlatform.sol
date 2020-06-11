@@ -114,7 +114,7 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         /// Update voting count of voted companyProfileId
         companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor] = companyProfileVoteCount[companyProfileVotingRound][companyProfileIdToVoteFor].add(1);
 
-        /// Update current top project (artwork)
+        /// Update current top project (companyProfile)
         uint _topCompanyProfileVoteCount;
         uint[] memory _topCompanyProfileIds;
         (_topCompanyProfileVoteCount, _topCompanyProfileIds) = getTopCompanyProfile(companyProfileVotingRound);
@@ -129,9 +129,8 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     function getTopCompanyProfile(uint companyProfileVotingRound) public returns (uint _topCompanyProfileVoteCount, uint[] memory topCompanyProfileIds) {
         /// Update current top project (artwork)
         uint currentCompanyProfileId = companyProfileId;
-        uint _topCompanyProfileVoteCount = topCompanyProfileVoteCount[companyProfileVotingRound];
         for (uint i=0; i < currentCompanyProfileId; i++) {
-            if (companyProfileVoteCount[companyProfileVotingRound][i] >= _topCompanyProfileVoteCount) {
+            if (companyProfileVoteCount[companyProfileVotingRound][i] >= topCompanyProfileVoteCount[companyProfileVotingRound]) {
                 topCompanyProfileVoteCount[companyProfileVotingRound] = companyProfileVoteCount[companyProfileVotingRound][i];
             } 
         }
@@ -145,6 +144,12 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
     /// Need to execute for-loop in frontend to get TopCompanyProfileIds
     function getTopCompanyProfileIds(uint _companyProfileVotingRound, uint _topCompanyProfileVoteCount) public {
+        // for (uint c=0; c < topCompanyProfileIds.length; c++) {
+        //     if (topCompanyProfileIds[c] ) {
+
+        //     }
+        // }
+
         uint currentCompanyProfileId = companyProfileId;
         for (uint i=0; i < currentCompanyProfileId; i++) {
             if (companyProfileVoteCount[_companyProfileVotingRound][i] == _topCompanyProfileVoteCount) {
