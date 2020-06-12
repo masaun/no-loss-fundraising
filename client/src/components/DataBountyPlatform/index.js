@@ -34,6 +34,7 @@ export default class DataBountyPlatform extends Component {
         this.distributeFunds = this.distributeFunds.bind(this);
 
         /////// Getter Functions of others
+        this.getCompanyProfileList = this.getCompanyProfileList.bind(this);
         this._balanceOfContract = this._balanceOfContract.bind(this);
 
         /////// Test Functions
@@ -130,6 +131,18 @@ export default class DataBountyPlatform extends Component {
     /***
      * @notice - Getter Functions
      **/
+    getCompanyProfileList = async () => {
+        const { accounts, web3, dai, data_bounty_platform } = this.state;
+
+        let currentCompanyProfileId = await data_bounty_platform.methods.getCurrentCompanyProfileId().call();
+        console.log('=== getCurrentCompanyProfileId() ===\n', currentCompanyProfileId);
+
+        for (var i=1; i <= currentCompanyProfileId; i++) {
+            let companyProfile = await data_bounty_platform.methods.getCompanyProfile(i).call();
+            console.log('=== getCompanyProfile() ===\n', companyProfile);
+        }      
+    }
+
     _balanceOfContract = async () => {
         const { accounts, web3, dai, data_bounty_platform } = this.state;
 
@@ -326,11 +339,6 @@ export default class DataBountyPlatform extends Component {
 
                 <hr />
 
-
-
-
-
-
                 <hr />
 
                 <Grid container style={{ marginTop: 20 }}>
@@ -362,6 +370,8 @@ export default class DataBountyPlatform extends Component {
                               borderColor={"#E8E8E8"}
                         >
                             <h4>Test Functions</h4> <br />
+                            <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getCompanyProfileList}> Get CompanyProfile List </Button> <br />
+
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getAaveRelatedFunction}> Get Aave Related Function </Button> <br />
 
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.timestampFromDate}> Timestamp From Date </Button> <br />
