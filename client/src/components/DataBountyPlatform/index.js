@@ -81,9 +81,24 @@ export default class DataBountyPlatform extends Component {
         const _companyProfileHash = web3.utils.toHex(companyProfileName);
 
         let res = await data_bounty_platform.methods.createCompanyProfile(_companyProfileHash).send({ from: accounts[0] });
-        console.log('=== createCompanyProfile() ===\n', res);           
+        console.log('=== createCompanyProfile() ===\n', res);
 
-        this.setState({ valueCreateCompanyProfileName: '' });
+        var companyProfileHash = await res.events.CreateCompanyProfile.returnValues.companyProfileHash;
+        var companyProfileOwner = await res.events.CreateCompanyProfile.returnValues.companyProfileOwner;
+        var companyProfileState = await res.events.CreateCompanyProfile.returnValues.companyProfileState;
+        var newCompanyProfileId = await res.events.CreateCompanyProfile.returnValues.newCompanyProfileId;
+
+        var companyProfileDetail = [];
+        companyProfileDetail.push(companyProfileHash);
+        companyProfileDetail.push(companyProfileOwner);
+        companyProfileDetail.push(companyProfileState);
+        companyProfileDetail.push(newCompanyProfileId);
+
+        var companyProfileList = [];
+        companyProfileList.push(companyProfileDetail);
+
+        this.setState({ valueCreateCompanyProfileName: '',
+                        companyProfileList: companyProfileList });
     }
 
     /***
@@ -280,7 +295,7 @@ export default class DataBountyPlatform extends Component {
         return (
             <div className={styles.widgets}>
                 <Grid container style={{ marginTop: 20 }}>
-                    <Field label="Deposit Amount">
+                    <Field label="Deposit DAI Amount">
                         <Input
                             type="text"
                             width={1}
@@ -308,6 +323,13 @@ export default class DataBountyPlatform extends Component {
                         </Button>
                     </Field>
                 </Grid>
+
+                <hr />
+
+
+
+
+
 
                 <hr />
 

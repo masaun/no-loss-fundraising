@@ -242,10 +242,6 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         return winningAddressListMemory;
     }
 
-
-    /***
-     * @notice - Get balance
-     **/
     function balanceOfContract() public view returns (uint balanceOfContract_DAI, uint balanceOfContract_ETH) {
         return (dai.balanceOf(address(this)), address(this).balance);
     }
