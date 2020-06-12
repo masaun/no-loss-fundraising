@@ -42,12 +42,16 @@ export default class DataBountyPlatform extends Component {
 
         /////// Handler
         this.handleJoinPoolDepositAmount = this.handleJoinPoolDepositAmount.bind(this);
+        this.handleCreateCompanyProfileName = this.handleCreateCompanyProfileName.bind(this);
     }
 
     handleJoinPoolDepositAmount(event) {
         this.setState({ valueJoinPoolDepositAmount: event.target.value });
     }
 
+    handleCreateCompanyProfileName(event) {
+        this.setState({ valueCreateCompanyProfileName: event.target.value });
+    }
 
 
     /***
@@ -71,13 +75,15 @@ export default class DataBountyPlatform extends Component {
      * @notice - Create CompanyProfile and list them.
      **/
     createCompanyProfile = async () => {
-        const { accounts, web3, dai, data_bounty_platform } = this.state;
+        const { accounts, web3, dai, data_bounty_platform, valueCreateCompanyProfileName } = this.state;
 
-        const companyProfileName = "Tiger.Inc";
+        const companyProfileName = valueCreateCompanyProfileName;
         const _companyProfileHash = web3.utils.toHex(companyProfileName);
 
         let res = await data_bounty_platform.methods.createCompanyProfile(_companyProfileHash).send({ from: accounts[0] });
         console.log('=== createCompanyProfile() ===\n', res);           
+
+        this.setState({ valueCreateCompanyProfileName: '' });
     }
 
     /***
@@ -287,6 +293,23 @@ export default class DataBountyPlatform extends Component {
                         </Button>
                     </Field>
                 </Grid>
+
+                <Grid container style={{ marginTop: 20 }}>
+                    <Field label="Company Profile Name">
+                        <Input
+                            type="text"
+                            width={1}
+                            value={this.state.valueCreateCompanyProfileName} 
+                            onChange={this.handleCreateCompanyProfileName}
+                        />
+
+                        <Button type="submit" onClick={this.createCompanyProfile} width={1}>
+                          Create Company Profile
+                        </Button>
+                    </Field>
+                </Grid>
+
+                <hr />
 
                 <Grid container style={{ marginTop: 20 }}>
                     <Grid item xs={12}>
