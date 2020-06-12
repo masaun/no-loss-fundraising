@@ -54,6 +54,8 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         companyProfileDeadline = now.add(votingInterval);        
     }
 
+
+
     /***
      * @notice - Join Pool (Deposit DAI into idle-contracts-v3) for getting right of voting
      **/
@@ -162,7 +164,6 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
                 if (judgeDuplication == false) {
                     topCompanyProfileIds[_companyProfileVotingRound].push(i);
                 } 
-                //topCompanyProfileIds[_companyProfileVotingRound].push(i);
             } 
         } 
     }
