@@ -267,7 +267,8 @@ export default class DataBountyPlatform extends Component {
             );
             console.log('=== instanceBokkyPooBahsDateTimeContract ===', instanceBokkyPooBahsDateTimeContract);
 
-
+            ///@notice - Call getCompanyProfileList method every loading page 
+            this.getCompanyProfileList();
 
             if (DataBountyPlatform || Erc20 || BokkyPooBahsDateTimeContract) {
               // Set web3, accounts, and contract to the state, and then proceed with an
