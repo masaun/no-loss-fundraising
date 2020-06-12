@@ -267,9 +267,6 @@ export default class DataBountyPlatform extends Component {
             );
             console.log('=== instanceBokkyPooBahsDateTimeContract ===', instanceBokkyPooBahsDateTimeContract);
 
-            ///@notice - Call getCompanyProfileList method every loading page 
-            this.getCompanyProfileList();
-
             if (DataBountyPlatform || Erc20 || BokkyPooBahsDateTimeContract) {
               // Set web3, accounts, and contract to the state, and then proceed with an
               // example of interacting with the contract's methods.
@@ -299,6 +296,9 @@ export default class DataBountyPlatform extends Component {
             else {
               this.setState({ web3, ganacheAccounts, accounts, balance, networkId, networkType, hotLoaderDisabled, isMetaMask });
             }
+
+            ///@notice - To call getCompanyProfileList method every loading page 
+            await this.getCompanyProfileList();
           }
         } catch (error) {
           // Catch any errors for any of the above operations.
@@ -311,7 +311,7 @@ export default class DataBountyPlatform extends Component {
 
 
     render() {
-        const { accounts } = this.state;
+        const { accounts, companyProfileList } = this.state;
 
         return (
             <div className={styles.widgets}>
@@ -346,6 +346,12 @@ export default class DataBountyPlatform extends Component {
                 </Grid>
 
                 <hr />
+
+                <Grid container style={{ marginTop: 20 }}>
+                    <Box>
+                       { companyProfileList }
+                    </Box>
+                </Grid>
 
                 <hr />
 
