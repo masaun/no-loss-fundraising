@@ -137,10 +137,16 @@ export default class DataBountyPlatform extends Component {
         let currentCompanyProfileId = await data_bounty_platform.methods.getCurrentCompanyProfileId().call();
         console.log('=== getCurrentCompanyProfileId() ===\n', currentCompanyProfileId);
 
+        var companyProfileList = [];
         for (var i=1; i <= currentCompanyProfileId; i++) {
             let companyProfile = await data_bounty_platform.methods.getCompanyProfile(i).call();
             console.log('=== getCompanyProfile() ===\n', companyProfile);
-        }      
+
+            companyProfileList.push(companyProfile);
+        }
+
+        console.log('=== companyProfileList ===\n', companyProfileList);
+        this.setState({ companyProfileList: companyProfileList });
     }
 
     _balanceOfContract = async () => {
@@ -262,6 +268,7 @@ export default class DataBountyPlatform extends Component {
             console.log('=== instanceBokkyPooBahsDateTimeContract ===', instanceBokkyPooBahsDateTimeContract);
 
 
+
             if (DataBountyPlatform || Erc20 || BokkyPooBahsDateTimeContract) {
               // Set web3, accounts, and contract to the state, and then proceed with an
               // example of interacting with the contract's methods.
@@ -303,7 +310,7 @@ export default class DataBountyPlatform extends Component {
 
 
     render() {
-        const { accounts, poolTogether_nybw } = this.state;
+        const { accounts } = this.state;
 
         return (
             <div className={styles.widgets}>
