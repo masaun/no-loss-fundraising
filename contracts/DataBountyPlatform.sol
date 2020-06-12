@@ -242,6 +242,24 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         return winningAddressListMemory;
     }
 
+
+    /***
+     * @notice - Getter Function
+     **/
+    function getCompanyProfile(uint companyProfileId) 
+        public 
+        view 
+        returns (uint _companyProfileId, 
+                 address _companyProfileOwner,
+                 CompanyProfileState _companyProfileState,
+                 string memory _companyProfileHash) 
+    {
+        return (companyProfileId,
+                companyProfileOwner[companyProfileId],
+                companyProfileState[companyProfileId],
+                companyProfileDetails[companyProfileId]);
+    }
+
     function balanceOfContract() public view returns (uint balanceOfContract_DAI, uint balanceOfContract_ETH) {
         return (dai.balanceOf(address(this)), address(this).balance);
     }
