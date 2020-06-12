@@ -246,6 +246,10 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
     /***
      * @notice - Getter Function
      **/
+    function getCurrentCompanyProfileId() public view returns (uint currentCompanyProfileId) {
+        return companyProfileId;
+    }
+
     function getCompanyProfile(uint companyProfileId) 
         public 
         view 
