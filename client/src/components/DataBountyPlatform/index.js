@@ -4,7 +4,7 @@ import getWeb3, { getGanacheWeb3, Web3 } from "../../utils/getWeb3";
 import App from "../../App.js";
 
 import { Grid } from '@material-ui/core';
-import { Loader, Button, Card, Input, Heading, Table, Form, Flex, Box, Image, EthAddress } from 'rimble-ui';
+import { Loader, Button, Card, Input, Field, Heading, Table, Form, Flex, Box, Image, EthAddress } from 'rimble-ui';
 import { zeppelinSolidityHotLoaderOptions } from '../../../config/webpack';
 
 import styles from '../../App.module.scss';
@@ -24,49 +24,84 @@ export default class DataBountyPlatform extends Component {
             storageValue: 0,
             web3: null,
             accounts: null,
-            route: window.location.pathname.replace("/", "")
+            route: window.location.pathname.replace("/", ""),
+
+            companyProfileList: []
         };
 
         /////// AAVE related functions
-        this.joinPool = this.joinPool.bind(this);
+        this.joinPool = this.joinPool.bind(this);        
         this.createCompanyProfile = this.createCompanyProfile.bind(this);
         this.voteForCompanyProfile = this.voteForCompanyProfile.bind(this);
         this.distributeFunds = this.distributeFunds.bind(this);
 
         /////// Getter Functions of others
+        this.getCompanyProfileList = this.getCompanyProfileList.bind(this);
         this._balanceOfContract = this._balanceOfContract.bind(this);
 
         /////// Test Functions
         this.getAaveRelatedFunction = this.getAaveRelatedFunction.bind(this);
         this.timestampFromDate = this.timestampFromDate.bind(this);
+
+        /////// Handler
+        this.handleJoinPoolDepositAmount = this.handleJoinPoolDepositAmount.bind(this);
+        this.handleCreateCompanyProfileName = this.handleCreateCompanyProfileName.bind(this);
     }
+
+    handleJoinPoolDepositAmount(event) {
+        this.setState({ valueJoinPoolDepositAmount: event.target.value });
+    }
+
+    handleCreateCompanyProfileName(event) {
+        this.setState({ valueCreateCompanyProfileName: event.target.value });
+    }
+
 
     /***
      * @notice - AAVE related functions
      **/
     joinPool = async () => {
-        const { accounts, web3, dai, data_bounty_platform, DAI_ADDRESS, DATA_BOUNTY_PLATFORM_ADDRESS } = this.state;
+        const { accounts, web3, dai, data_bounty_platform, DAI_ADDRESS, DATA_BOUNTY_PLATFORM_ADDRESS, valueJoinPoolDepositAmount } = this.state;
 
         const _reserve = DAI_ADDRESS;  /// DAI(aave) on Kovan
-        const _amount = web3.utils.toWei('1.12345', 'ether');
+        const _amount = web3.utils.toWei(valueJoinPoolDepositAmount, 'ether');
         const _referralCode = 0;
 
         let res1 = await dai.methods.approve(DATA_BOUNTY_PLATFORM_ADDRESS, _amount).send({ from: accounts[0] });
         let res2 = await data_bounty_platform.methods.joinPool(_reserve, _amount, _referralCode).send({ from: accounts[0] });
-        console.log('=== joinPool() ===\n', res2);                
+        console.log('=== joinPool() ===\n', res2);
+
+        this.setState({ valueJoinPoolDepositAmount: '' });
     }
 
     /***
      * @notice - Create CompanyProfile and list them.
      **/
     createCompanyProfile = async () => {
-        const { accounts, web3, dai, data_bounty_platform } = this.state;
+        const { accounts, web3, dai, data_bounty_platform, valueCreateCompanyProfileName } = this.state;
 
-        const companyProfileName = "Tiger.Inc";
+        const companyProfileName = valueCreateCompanyProfileName;
         const _companyProfileHash = web3.utils.toHex(companyProfileName);
 
         let res = await data_bounty_platform.methods.createCompanyProfile(_companyProfileHash).send({ from: accounts[0] });
-        console.log('=== createCompanyProfile() ===\n', res);           
+        console.log('=== createCompanyProfile() ===\n', res);
+
+        var companyProfileHash = await res.events.CreateCompanyProfile.returnValues.companyProfileHash;
+        var companyProfileOwner = await res.events.CreateCompanyProfile.returnValues.companyProfileOwner;
+        var companyProfileState = await res.events.CreateCompanyProfile.returnValues.companyProfileState;
+        var newCompanyProfileId = await res.events.CreateCompanyProfile.returnValues.newCompanyProfileId;
+
+        var companyProfileDetail = [];
+        companyProfileDetail.push(companyProfileHash);
+        companyProfileDetail.push(companyProfileOwner);
+        companyProfileDetail.push(companyProfileState);
+        companyProfileDetail.push(newCompanyProfileId);
+
+        var companyProfileList = [];
+        companyProfileList.push(companyProfileDetail);
+
+        this.setState({ valueCreateCompanyProfileName: '',
+                        companyProfileList: companyProfileList });
     }
 
     /***
@@ -98,6 +133,36 @@ export default class DataBountyPlatform extends Component {
     /***
      * @notice - Getter Functions
      **/
+    getCompanyProfileList = async () => {
+        const { accounts, web3, dai, data_bounty_platform } = this.state;
+
+        let currentCompanyProfileId = await data_bounty_platform.methods.getCurrentCompanyProfileId().call();
+        console.log('=== getCurrentCompanyProfileId() ===\n', currentCompanyProfileId);
+
+        var companyProfileList = [];
+        for (var i=1; i <= currentCompanyProfileId; i++) {
+            let companyProfile = await data_bounty_platform.methods.getCompanyProfile(i).call();
+            console.log('=== getCompanyProfile() ===\n', companyProfile);
+
+            companyProfileList.push(companyProfile);
+        }
+
+        console.log('=== companyProfileList ===\n', companyProfileList);
+        this.setState({ companyProfileList: companyProfileList });
+
+        for (let c=0; c < companyProfileList.length; c++) {
+            const companyProfiles = companyProfileList.map((companyProfile) => 
+                <ul>
+                    <li>companyProfileId: { companyProfile._companyProfileId }</li>
+                    <li>companyProfileOwner: { companyProfile._companyProfileOwner }</li>
+                    <li>companyProfileHash: { companyProfile._companyProfileHash }</li>
+                    <li>companyProfileState: { companyProfile._companyProfileState }</li>
+                </ul>
+            );
+            this.setState({ companyProfiles: companyProfiles });
+        }
+    }
+
     _balanceOfContract = async () => {
         const { accounts, web3, dai, data_bounty_platform } = this.state;
 
@@ -216,7 +281,6 @@ export default class DataBountyPlatform extends Component {
             );
             console.log('=== instanceBokkyPooBahsDateTimeContract ===', instanceBokkyPooBahsDateTimeContract);
 
-
             if (DataBountyPlatform || Erc20 || BokkyPooBahsDateTimeContract) {
               // Set web3, accounts, and contract to the state, and then proceed with an
               // example of interacting with the contract's methods.
@@ -247,6 +311,9 @@ export default class DataBountyPlatform extends Component {
               this.setState({ web3, ganacheAccounts, accounts, balance, networkId, networkType, hotLoaderDisabled, isMetaMask });
             }
           }
+
+          ///@notice - To call getCompanyProfileList method every loading page 
+          await this.getCompanyProfileList();
         } catch (error) {
           // Catch any errors for any of the above operations.
           alert(
@@ -258,11 +325,51 @@ export default class DataBountyPlatform extends Component {
 
 
     render() {
-        const { accounts, poolTogether_nybw } = this.state;
+        const { accounts, companyProfileList, companyProfiles } = this.state;
 
         return (
             <div className={styles.widgets}>
-                <Grid container style={{ marginTop: 32 }}>
+                <Grid container style={{ marginTop: 20 }}>
+                    <Field label="Deposit DAI Amount">
+                        <Input
+                            type="text"
+                            width={1}
+                            value={this.state.valueJoinPoolDepositAmount} 
+                            onChange={this.handleJoinPoolDepositAmount}
+                        />
+
+                        <Button type="submit" onClick={this.joinPool} width={1}>
+                          Join Pool
+                        </Button>
+                    </Field>
+                </Grid>
+
+                <Grid container style={{ marginTop: 20 }}>
+                    <Field label="Company Profile Name">
+                        <Input
+                            type="text"
+                            width={1}
+                            value={this.state.valueCreateCompanyProfileName} 
+                            onChange={this.handleCreateCompanyProfileName}
+                        />
+
+                        <Button type="submit" onClick={this.createCompanyProfile} width={1}>
+                          Create Company Profile
+                        </Button>
+                    </Field>
+                </Grid>
+
+                <hr />
+
+                <Grid container style={{ marginTop: 20 }}>
+                    <Box>
+                       { companyProfiles }
+                    </Box>
+                </Grid>
+
+                <hr />
+
+                <Grid container style={{ marginTop: 20 }}>
                     <Grid item xs={12}>
                         <Card width={"auto"} 
                               maxWidth={"420px"} 
@@ -271,7 +378,7 @@ export default class DataBountyPlatform extends Component {
                               p={20} 
                               borderColor={"#E8E8E8"}
                         >
-                            <h4>Data Bounty Platform</h4> <br />
+                            <h4>No Loss Fundraising</h4> <br />
                             <Button size={'small'} mt={3} mb={2} onClick={this.joinPool}> Join Pool </Button> <br />
 
                             <Button size={'small'} mt={3} mb={2} onClick={this.createCompanyProfile}> Create Company Profile </Button> <br />
@@ -291,6 +398,8 @@ export default class DataBountyPlatform extends Component {
                               borderColor={"#E8E8E8"}
                         >
                             <h4>Test Functions</h4> <br />
+                            <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getCompanyProfileList}> Get CompanyProfile List </Button> <br />
+
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getAaveRelatedFunction}> Get Aave Related Function </Button> <br />
 
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.timestampFromDate}> Timestamp From Date </Button> <br />

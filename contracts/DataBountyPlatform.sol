@@ -54,6 +54,8 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
         companyProfileDeadline = now.add(votingInterval);        
     }
 
+
+
     /***
      * @notice - Join Pool (Deposit DAI into idle-contracts-v3) for getting right of voting
      **/
@@ -162,7 +164,6 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
                 if (judgeDuplication == false) {
                     topCompanyProfileIds[_companyProfileVotingRound].push(i);
                 } 
-                //topCompanyProfileIds[_companyProfileVotingRound].push(i);
             } 
         } 
     }
@@ -243,8 +244,26 @@ contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstan
 
 
     /***
-     * @notice - Get balance
+     * @notice - Getter Function
      **/
+    function getCurrentCompanyProfileId() public view returns (uint currentCompanyProfileId) {
+        return companyProfileId;
+    }
+
+    function getCompanyProfile(uint companyProfileId) 
+        public 
+        view 
+        returns (uint _companyProfileId, 
+                 address _companyProfileOwner,
+                 CompanyProfileState _companyProfileState,
+                 string memory _companyProfileHash) 
+    {
+        return (companyProfileId,
+                companyProfileOwner[companyProfileId],
+                companyProfileState[companyProfileId],
+                companyProfileDetails[companyProfileId]);
+    }
+
     function balanceOfContract() public view returns (uint balanceOfContract_DAI, uint balanceOfContract_ETH) {
         return (dai.balanceOf(address(this)), address(this).balance);
     }
