@@ -140,7 +140,7 @@ export default class DataBountyPlatform extends Component {
         console.log('=== getCurrentCompanyProfileId() ===\n', currentCompanyProfileId);
 
         var companyProfileList = [];
-        for (var i=1; i <= currentCompanyProfileId; i++) {
+        for (var i=0; i < currentCompanyProfileId; i++) {
             let companyProfile = await data_bounty_platform.methods.getCompanyProfile(i).call();
             console.log('=== getCompanyProfile() ===\n', companyProfile);
 
