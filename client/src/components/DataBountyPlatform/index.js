@@ -24,7 +24,9 @@ export default class DataBountyPlatform extends Component {
             storageValue: 0,
             web3: null,
             accounts: null,
-            route: window.location.pathname.replace("/", "")
+            route: window.location.pathname.replace("/", ""),
+
+            companyProfileList: []
         };
 
         /////// AAVE related functions
@@ -147,6 +149,18 @@ export default class DataBountyPlatform extends Component {
 
         console.log('=== companyProfileList ===\n', companyProfileList);
         this.setState({ companyProfileList: companyProfileList });
+
+        for (let c=0; c < companyProfileList.length; c++) {
+            const companyProfiles = companyProfileList.map((companyProfile) => 
+                <ul>
+                    <li>companyProfileId: { companyProfile._companyProfileId }</li>
+                    <li>companyProfileOwner: { companyProfile._companyProfileOwner }</li>
+                    <li>companyProfileHash: { companyProfile._companyProfileHash }</li>
+                    <li>companyProfileState: { companyProfile._companyProfileState }</li>
+                </ul>
+            );
+            this.setState({ companyProfiles: companyProfiles });
+        }
     }
 
     _balanceOfContract = async () => {
@@ -296,10 +310,10 @@ export default class DataBountyPlatform extends Component {
             else {
               this.setState({ web3, ganacheAccounts, accounts, balance, networkId, networkType, hotLoaderDisabled, isMetaMask });
             }
-
-            ///@notice - To call getCompanyProfileList method every loading page 
-            await this.getCompanyProfileList();
           }
+
+          ///@notice - To call getCompanyProfileList method every loading page 
+          await this.getCompanyProfileList();
         } catch (error) {
           // Catch any errors for any of the above operations.
           alert(
@@ -311,7 +325,7 @@ export default class DataBountyPlatform extends Component {
 
 
     render() {
-        const { accounts, companyProfileList } = this.state;
+        const { accounts, companyProfileList, companyProfiles } = this.state;
 
         return (
             <div className={styles.widgets}>
@@ -349,7 +363,7 @@ export default class DataBountyPlatform extends Component {
 
                 <Grid container style={{ marginTop: 20 }}>
                     <Box>
-                       { companyProfileList }
+                       { companyProfiles }
                     </Box>
                 </Grid>
 
