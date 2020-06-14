@@ -157,6 +157,7 @@ export default class DataBountyPlatform extends Component {
                     <li>companyProfileOwner: { companyProfile._companyProfileOwner }</li>
                     <li>companyProfileHash: { companyProfile._companyProfileHash }</li>
                     <li>companyProfileState: { companyProfile._companyProfileState }</li>
+                    <Button size={'small'} mt={3} mb={2} onClick={this.voteForCompanyProfile}> Vote For Company Profile </Button>
                 </ul>
             );
             this.setState({ companyProfiles: companyProfiles });
