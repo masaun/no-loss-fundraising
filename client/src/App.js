@@ -5,8 +5,8 @@ import Footer from "./components/Footer/index.js";
 import Hero from "./components/Hero/index.js";
 import Web3Info from "./components/Web3Info/index.js";
 
-// Data Bounty Platform
-import DataBountyPlatform from "./components/DataBountyPlatform/index.js";
+// NoLossFundraising
+import NoLossFundraising from "./components/NoLossFundraising/index.js";
 
 import { Grid } from '@material-ui/core';
 import { Loader, Button, Card, Input, Heading, Table, Form, Flex, Box, Image, EthAddress } from 'rimble-ui';
@@ -51,9 +51,9 @@ class App extends Component {
   componentDidMount = async () => {
     const hotLoaderDisabled = zeppelinSolidityHotLoaderOptions.disabled;
  
-    let DataBountyPlatform = {};
+    let NoLossFundraising = {};
     try {
-      DataBountyPlatform = require("../../build/contracts/DataBountyPlatform.json"); // Load artifact-file of DataBountyPlatform
+      NoLossFundraising = require("../../build/contracts/NoLossFundraising.json"); // Load artifact-file of NoLossFundraising
     } catch (e) {
       console.log(e);
     }
@@ -80,22 +80,22 @@ class App extends Component {
         let balance = accounts.length > 0 ? await web3.eth.getBalance(accounts[0]): web3.utils.toWei('0');
         balance = web3.utils.fromWei(balance, 'ether');
 
-        let instanceDataBountyPlatform = null;
+        let instanceNoLossFundraising = null;
         let deployedNetwork = null;
 
         // Create instance of contracts
-        if (DataBountyPlatform.networks) {
-          deployedNetwork = DataBountyPlatform.networks[networkId.toString()];
+        if (NoLossFundraising.networks) {
+          deployedNetwork = NoLossFundraising.networks[networkId.toString()];
           if (deployedNetwork) {
-            instanceDataBountyPlatform = new web3.eth.Contract(
-              DataBountyPlatform.abi,
+            instanceNoLossFundraising = new web3.eth.Contract(
+              NoLossFundraising.abi,
               deployedNetwork && deployedNetwork.address,
             );
-            console.log('=== instanceDataBountyPlatform ===', instanceDataBountyPlatform);
+            console.log('=== instanceNoLossFundraising ===', instanceNoLossFundraising);
           }
         }
 
-        if (DataBountyPlatform) {
+        if (NoLossFundraising) {
           // Set web3, accounts, and contract to the state, and then proceed with an
           // example of interacting with the contract's methods.
           this.setState({ 
@@ -107,13 +107,13 @@ class App extends Component {
             networkType, 
             hotLoaderDisabled,
             isMetaMask, 
-            data_bounty_platform: instanceDataBountyPlatform
+            data_bounty_platform: instanceNoLossFundraising
           }, () => {
             this.refreshValues(
-              instanceDataBountyPlatform
+              instanceNoLossFundraising
             );
             setInterval(() => {
-              this.refreshValues(instanceDataBountyPlatform);
+              this.refreshValues(instanceNoLossFundraising);
             }, 5000);
           });
         }
@@ -136,9 +136,9 @@ class App extends Component {
     }
   }
 
-  refreshValues = (instanceDataBountyPlatform) => {
-    if (instanceDataBountyPlatform) {
-      console.log('refreshValues of instanceDataBountyPlatform');
+  refreshValues = (instanceNoLossFundraising) => {
+    if (instanceNoLossFundraising) {
+      console.log('refreshValues of instanceNoLossFundraising');
     }
   }
 
@@ -174,10 +174,10 @@ class App extends Component {
     );
   }
 
-  renderDataBountyPlatform() {
+  renderNoLossFundraising() {
     return (
       <div className={styles.wrapper}>
-        <DataBountyPlatform />
+        <NoLossFundraising />
       </div>
     );
   }
@@ -187,7 +187,7 @@ class App extends Component {
       <div className={styles.App}>
         <Header />
           {this.state.route === '' && this.renderInstructions()}
-          {this.state.route === 'data-bounty-platform' && this.renderDataBountyPlatform()} 
+          {this.state.route === 'no-loss-fundraising' && this.renderNoLossFundraising()} 
         <Footer />
       </div>
     );

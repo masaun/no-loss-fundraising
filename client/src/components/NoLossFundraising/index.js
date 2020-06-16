@@ -15,7 +15,7 @@ import { contractAddressList } from '../../data/contractAddress/contractAddress.
 import { tokenAddressList } from '../../data/tokenAddress/tokenAddress.js'
 
 
-export default class DataBountyPlatform extends Component {
+export default class NoLossFundraising extends Component {
     constructor(props) {    
         super(props);
 
@@ -192,9 +192,9 @@ export default class DataBountyPlatform extends Component {
     //////////////////////////////////// 
     ///// Refresh Values
     ////////////////////////////////////
-    refreshValues = (instanceDataBountyPlatform) => {
-        if (instanceDataBountyPlatform) {
-          //console.log('refreshValues of instanceDataBountyPlatform');
+    refreshValues = (instanceNoLossFundraising) => {
+        if (instanceNoLossFundraising) {
+          //console.log('refreshValues of instanceNoLossFundraising');
         }
     }
 
@@ -215,11 +215,11 @@ export default class DataBountyPlatform extends Component {
     componentDidMount = async () => {
         const hotLoaderDisabled = zeppelinSolidityHotLoaderOptions.disabled;
      
-        let DataBountyPlatform = {};
+        let NoLossFundraising = {};
         let Erc20 = {};
         let BokkyPooBahsDateTimeContract = {};
         try {
-          DataBountyPlatform = require("../../../../build/contracts/DataBountyPlatform.json");
+          NoLossFundraising = require("../../../../build/contracts/NoLossFundraising.json");
           Erc20 = require("../../../../build/contracts/IERC20.json");
           BokkyPooBahsDateTimeContract = require("../../../../build/contracts/BokkyPooBahsDateTimeContract.json");   //@dev - BokkyPooBahsDateTimeContract.sol (for calculate timestamp)
         } catch (e) {
@@ -249,17 +249,17 @@ export default class DataBountyPlatform extends Component {
             balance = web3.utils.fromWei(balance, 'ether');
 
             // Create instance of contracts
-            let instanceDataBountyPlatform = null;
+            let instanceNoLossFundraising = null;
             let deployedNetwork = null;
-            let DATA_BOUNTY_PLATFORM_ADDRESS = DataBountyPlatform.networks[networkId.toString()].address;
-            if (DataBountyPlatform.networks) {
-              deployedNetwork = DataBountyPlatform.networks[networkId.toString()];
+            let NO_LOSS_FUNDRAISING_ADDRESS = NoLossFundraising.networks[networkId.toString()].address;
+            if (NoLossFundraising.networks) {
+              deployedNetwork = NoLossFundraising.networks[networkId.toString()];
               if (deployedNetwork) {
-                instanceDataBountyPlatform = new web3.eth.Contract(
-                  DataBountyPlatform.abi,
+                instanceNoLossFundraising = new web3.eth.Contract(
+                  NoLossFundraising.abi,
                   deployedNetwork && deployedNetwork.address,
                 );
-                console.log('=== instanceDataBountyPlatform ===', instanceDataBountyPlatform);
+                console.log('=== instanceNoLossFundraising ===', instanceNoLossFundraising);
               }
             }
 
@@ -282,7 +282,7 @@ export default class DataBountyPlatform extends Component {
             );
             console.log('=== instanceBokkyPooBahsDateTimeContract ===', instanceBokkyPooBahsDateTimeContract);
 
-            if (DataBountyPlatform || Erc20 || BokkyPooBahsDateTimeContract) {
+            if (NoLossFundraising || Erc20 || BokkyPooBahsDateTimeContract) {
               // Set web3, accounts, and contract to the state, and then proceed with an
               // example of interacting with the contract's methods.
               this.setState({ 
@@ -294,17 +294,17 @@ export default class DataBountyPlatform extends Component {
                 networkType, 
                 hotLoaderDisabled,
                 isMetaMask, 
-                data_bounty_platform: instanceDataBountyPlatform,
+                no_loss_fundraising: instanceNoLossFundraising,
                 dai: instanceDai,
                 bokkypoobahs_datetime_contract: instanceBokkyPooBahsDateTimeContract,
                 DATA_BOUNTY_PLATFORM_ADDRESS : DATA_BOUNTY_PLATFORM_ADDRESS,
                 DAI_ADDRESS: DAI_ADDRESS,
               }, () => {
                 this.refreshValues(
-                  instanceDataBountyPlatform
+                  instanceNoLossFundraising
                 );
                 setInterval(() => {
-                  this.refreshValues(instanceDataBountyPlatform);
+                  this.refreshValues(instanceNoLossFundraising);
                 }, 5000);
               });
             }
