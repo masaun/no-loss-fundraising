@@ -15,7 +15,7 @@ import { contractAddressList } from '../../data/contractAddress/contractAddress.
 import { tokenAddressList } from '../../data/tokenAddress/tokenAddress.js'
 
 
-export default class DataBountyPlatform extends Component {
+export default class NoLossFundraising extends Component {
     constructor(props) {    
         super(props);
 
@@ -61,14 +61,14 @@ export default class DataBountyPlatform extends Component {
      * @notice - AAVE related functions
      **/
     joinPool = async () => {
-        const { accounts, web3, dai, data_bounty_platform, DAI_ADDRESS, DATA_BOUNTY_PLATFORM_ADDRESS, valueJoinPoolDepositAmount } = this.state;
+        const { accounts, web3, dai, no_loss_fundraising, DAI_ADDRESS, NO_LOSS_FUNDRAISING_ADDRESS, valueJoinPoolDepositAmount } = this.state;
 
         const _reserve = DAI_ADDRESS;  /// DAI(aave) on Kovan
         const _amount = web3.utils.toWei(valueJoinPoolDepositAmount, 'ether');
         const _referralCode = 0;
 
-        let res1 = await dai.methods.approve(DATA_BOUNTY_PLATFORM_ADDRESS, _amount).send({ from: accounts[0] });
-        let res2 = await data_bounty_platform.methods.joinPool(_reserve, _amount, _referralCode).send({ from: accounts[0] });
+        let res1 = await dai.methods.approve(NO_LOSS_FUNDRAISING_ADDRESS, _amount).send({ from: accounts[0] });
+        let res2 = await no_loss_fundraising.methods.joinPool(_reserve, _amount, _referralCode).send({ from: accounts[0] });
         console.log('=== joinPool() ===\n', res2);
 
         this.setState({ valueJoinPoolDepositAmount: '' });
@@ -78,12 +78,12 @@ export default class DataBountyPlatform extends Component {
      * @notice - Create CompanyProfile and list them.
      **/
     createCompanyProfile = async () => {
-        const { accounts, web3, dai, data_bounty_platform, valueCreateCompanyProfileName } = this.state;
+        const { accounts, web3, dai, no_loss_fundraising, valueCreateCompanyProfileName } = this.state;
 
         const companyProfileName = valueCreateCompanyProfileName;
         const _companyProfileHash = web3.utils.toHex(companyProfileName);
 
-        let res = await data_bounty_platform.methods.createCompanyProfile(_companyProfileHash).send({ from: accounts[0] });
+        let res = await no_loss_fundraising.methods.createCompanyProfile(_companyProfileHash).send({ from: accounts[0] });
         console.log('=== createCompanyProfile() ===\n', res);
 
         var companyProfileHash = await res.events.CreateCompanyProfile.returnValues.companyProfileHash;
@@ -108,11 +108,11 @@ export default class DataBountyPlatform extends Component {
      * @notice - Vote for a favorite CompanyProfile of voter (voter is only user who deposited before)
      **/
     voteForCompanyProfile = async () => {
-        const { accounts, web3, dai, data_bounty_platform } = this.state;
+        const { accounts, web3, dai, no_loss_fundraising } = this.state;
 
         const _companyProfileIdToVoteFor = 1;
 
-        let res = await data_bounty_platform.methods.voteForCompanyProfile(_companyProfileIdToVoteFor).send({ from: accounts[0] });
+        let res = await no_loss_fundraising.methods.voteForCompanyProfile(_companyProfileIdToVoteFor).send({ from: accounts[0] });
         console.log('=== voteForCompanyProfile() ===\n', res);           
     }
 
@@ -120,12 +120,12 @@ export default class DataBountyPlatform extends Component {
      * @notice - Distribute fund into selected CompanyProfile by voting)
      **/
     distributeFunds = async () => {
-        const { accounts, web3, dai, data_bounty_platform, DAI_ADDRESS } = this.state;
+        const { accounts, web3, dai, no_loss_fundraising, DAI_ADDRESS } = this.state;
 
         const _reserve = DAI_ADDRESS;  /// DAI(aave) on Kovan
         const _referralCode = 0;
 
-        let res = await data_bounty_platform.methods.distributeFunds(_reserve, _referralCode).send({ from: accounts[0] });
+        let res = await no_loss_fundraising.methods.distributeFunds(_reserve, _referralCode).send({ from: accounts[0] });
         console.log('=== distributeFunds() ===\n', res);         
     }
 
@@ -134,14 +134,14 @@ export default class DataBountyPlatform extends Component {
      * @notice - Getter Functions
      **/
     getCompanyProfileList = async () => {
-        const { accounts, web3, dai, data_bounty_platform } = this.state;
+        const { accounts, web3, dai, no_loss_fundraising } = this.state;
 
-        let currentCompanyProfileId = await data_bounty_platform.methods.getCurrentCompanyProfileId().call();
+        let currentCompanyProfileId = await no_loss_fundraising.methods.getCurrentCompanyProfileId().call();
         console.log('=== getCurrentCompanyProfileId() ===\n', currentCompanyProfileId);
 
         var companyProfileList = [];
         for (var i=0; i < currentCompanyProfileId; i++) {
-            let companyProfile = await data_bounty_platform.methods.getCompanyProfile(i).call();
+            let companyProfile = await no_loss_fundraising.methods.getCompanyProfile(i).call();
             console.log('=== getCompanyProfile() ===\n', companyProfile);
 
             companyProfileList.push(companyProfile);
@@ -165,9 +165,9 @@ export default class DataBountyPlatform extends Component {
     }
 
     _balanceOfContract = async () => {
-        const { accounts, web3, dai, data_bounty_platform } = this.state;
+        const { accounts, web3, dai, no_loss_fundraising } = this.state;
 
-        let res1 = await data_bounty_platform.methods.balanceOfContract().call();
+        let res1 = await no_loss_fundraising.methods.balanceOfContract().call();
         console.log('=== balanceOfContract() ===\n', res1);
     }
 
@@ -175,9 +175,9 @@ export default class DataBountyPlatform extends Component {
      * @notice - Test Functions
      **/    
     getAaveRelatedFunction = async () => {
-        const { accounts, web3, dai, data_bounty_platform } = this.state;
+        const { accounts, web3, dai, no_loss_fundraising } = this.state;
 
-        const aaveRelatedResult = await data_bounty_platform.methods.getAaveRelatedFunction().call();
+        const aaveRelatedResult = await no_loss_fundraising.methods.getAaveRelatedFunction().call();
         console.log('=== getAaveRelatedFunction ===', aaveRelatedResult);
     }
 
@@ -192,9 +192,9 @@ export default class DataBountyPlatform extends Component {
     //////////////////////////////////// 
     ///// Refresh Values
     ////////////////////////////////////
-    refreshValues = (instanceDataBountyPlatform) => {
-        if (instanceDataBountyPlatform) {
-          //console.log('refreshValues of instanceDataBountyPlatform');
+    refreshValues = (instanceNoLossFundraising) => {
+        if (instanceNoLossFundraising) {
+          //console.log('refreshValues of instanceNoLossFundraising');
         }
     }
 
@@ -215,11 +215,11 @@ export default class DataBountyPlatform extends Component {
     componentDidMount = async () => {
         const hotLoaderDisabled = zeppelinSolidityHotLoaderOptions.disabled;
      
-        let DataBountyPlatform = {};
+        let NoLossFundraising = {};
         let Erc20 = {};
         let BokkyPooBahsDateTimeContract = {};
         try {
-          DataBountyPlatform = require("../../../../build/contracts/DataBountyPlatform.json");
+          NoLossFundraising = require("../../../../build/contracts/NoLossFundraising.json");
           Erc20 = require("../../../../build/contracts/IERC20.json");
           BokkyPooBahsDateTimeContract = require("../../../../build/contracts/BokkyPooBahsDateTimeContract.json");   //@dev - BokkyPooBahsDateTimeContract.sol (for calculate timestamp)
         } catch (e) {
@@ -249,17 +249,17 @@ export default class DataBountyPlatform extends Component {
             balance = web3.utils.fromWei(balance, 'ether');
 
             // Create instance of contracts
-            let instanceDataBountyPlatform = null;
+            let instanceNoLossFundraising = null;
             let deployedNetwork = null;
-            let DATA_BOUNTY_PLATFORM_ADDRESS = DataBountyPlatform.networks[networkId.toString()].address;
-            if (DataBountyPlatform.networks) {
-              deployedNetwork = DataBountyPlatform.networks[networkId.toString()];
+            let NO_LOSS_FUNDRAISING_ADDRESS = NoLossFundraising.networks[networkId.toString()].address;
+            if (NoLossFundraising.networks) {
+              deployedNetwork = NoLossFundraising.networks[networkId.toString()];
               if (deployedNetwork) {
-                instanceDataBountyPlatform = new web3.eth.Contract(
-                  DataBountyPlatform.abi,
+                instanceNoLossFundraising = new web3.eth.Contract(
+                  NoLossFundraising.abi,
                   deployedNetwork && deployedNetwork.address,
                 );
-                console.log('=== instanceDataBountyPlatform ===', instanceDataBountyPlatform);
+                console.log('=== instanceNoLossFundraising ===', instanceNoLossFundraising);
               }
             }
 
@@ -282,7 +282,7 @@ export default class DataBountyPlatform extends Component {
             );
             console.log('=== instanceBokkyPooBahsDateTimeContract ===', instanceBokkyPooBahsDateTimeContract);
 
-            if (DataBountyPlatform || Erc20 || BokkyPooBahsDateTimeContract) {
+            if (NoLossFundraising || Erc20 || BokkyPooBahsDateTimeContract) {
               // Set web3, accounts, and contract to the state, and then proceed with an
               // example of interacting with the contract's methods.
               this.setState({ 
@@ -294,17 +294,17 @@ export default class DataBountyPlatform extends Component {
                 networkType, 
                 hotLoaderDisabled,
                 isMetaMask, 
-                data_bounty_platform: instanceDataBountyPlatform,
+                no_loss_fundraising: instanceNoLossFundraising,
                 dai: instanceDai,
                 bokkypoobahs_datetime_contract: instanceBokkyPooBahsDateTimeContract,
-                DATA_BOUNTY_PLATFORM_ADDRESS : DATA_BOUNTY_PLATFORM_ADDRESS,
+                NO_LOSS_FUNDRAISING_ADDRESS : NO_LOSS_FUNDRAISING_ADDRESS,
                 DAI_ADDRESS: DAI_ADDRESS,
               }, () => {
                 this.refreshValues(
-                  instanceDataBountyPlatform
+                  instanceNoLossFundraising
                 );
                 setInterval(() => {
-                  this.refreshValues(instanceDataBountyPlatform);
+                  this.refreshValues(instanceNoLossFundraising);
                 }, 5000);
               });
             }

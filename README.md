@@ -1,7 +1,7 @@
-# No Loss Fundraising📈
+# No Loss Fundraising for Startup Company📈
 
 ***
-## 【Introduction of No Loss Fundraising📈】
+## 【Introduction of No Loss Fundraising for Startup Company📈】
 - This is a dApp for startup company to provide new option of fund-raising.
 - This is a dApp that no loss fundraising platform for startup company.
   - Any starup company can publish their company profile for appeal to fund-raise.

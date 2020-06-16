@@ -21,7 +21,7 @@ import "./aave/contracts/interfaces/IAToken.sol";
 /***
  * @notice - This contract is that ...
  **/
-contract DataBountyPlatform is OwnableOriginal(msg.sender), McStorage, McConstants {
+contract NoLossFundraising is OwnableOriginal(msg.sender), McStorage, McConstants {
     using SafeMath for uint;
 
     uint companyProfileId;
