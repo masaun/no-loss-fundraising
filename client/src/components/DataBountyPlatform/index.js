@@ -157,6 +157,7 @@ export default class DataBountyPlatform extends Component {
                     <li>companyProfileOwner: { companyProfile._companyProfileOwner }</li>
                     <li>companyProfileHash: { companyProfile._companyProfileHash }</li>
                     <li>companyProfileState: { companyProfile._companyProfileState }</li>
+                    <Button size={'small'} mt={3} mb={2} onClick={this.voteForCompanyProfile}> Vote For Company Profile </Button>
                 </ul>
             );
             this.setState({ companyProfiles: companyProfiles });
@@ -362,9 +363,15 @@ export default class DataBountyPlatform extends Component {
                 <hr />
 
                 <Grid container style={{ marginTop: 20 }}>
-                    <Box>
+                    <Grid item xs={12}>
                        { companyProfiles }
-                    </Box>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                    </Grid>
                 </Grid>
 
                 <hr />
