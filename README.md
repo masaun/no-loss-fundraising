@@ -2,8 +2,9 @@
 
 ***
 ## 【Introduction of No Loss Fundraising📈】
+- This is a dApp for startup company to provide new option of fund-raising.
 - This is a dApp that no loss fundraising platform for startup company.
-  - Any starup company can publish their company profile for appeal to the fundraising.
+  - Any starup company can publish their company profile for appeal to fund-raise.
   - Only user who deposited can vote for a favorite company profile of startup.
   - Deposited amount from users is pooled and lended into lending-protocol (AAVE). After interests are generated.
   - Generated interests is distributed into startup(company profile) who got the most voting count.
